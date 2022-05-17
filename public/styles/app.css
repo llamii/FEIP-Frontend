@@ -1,0 +1,30 @@
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: rgb(240, 240, 240);
+}
+
+.title {
+  padding: 30%;
+  margin: 0;
+  padding: 0;
+}
+
+.bottom-title {
+  padding: 30%;
+  font-family: "OpenSans", sans-serif, 400;
+  margin: 0;
+  padding: 0;
+}
+
+.main-title {
+  padding: 35%;
+  font-size: 32px;
+  padding-top: 10%;
+  text-align: center;
+}
+
+.line-title {
+  background-color: rgba(0, 0, 0, 0.75);
+  margin: 10px;
+  height: 1px;
+}
