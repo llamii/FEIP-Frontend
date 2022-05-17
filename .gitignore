@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/build
 /pubic/scripts
 /public/styles
 /public/mix-manifest.json
