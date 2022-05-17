@@ -1,20 +1,20 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./resources/js/app.js":
-/*!*****************************!*\
-  !*** ./resources/js/app.js ***!
-  \*****************************/
+/***/ "./resources/scripts/main.js":
+/*!***********************************!*\
+  !*** ./resources/scripts/main.js ***!
+  \***********************************/
 /***/ (() => {
 
-console.log('Hello from "/resources/js/app.js" !');
+console.log('Hello from "/resources/js/app.js" !!!');
 
 /***/ }),
 
-/***/ "./resources/styles/app.scss":
-/*!***********************************!*\
-  !*** ./resources/styles/app.scss ***!
-  \***********************************/
+/***/ "./resources/styles/main.scss":
+/*!************************************!*\
+  !*** ./resources/styles/main.scss ***!
+  \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -110,8 +110,8 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"/js/app": 0,
-/******/ 			"styles/app": 0
+/******/ 			"/build/bundle": 0,
+/******/ 			"build/bundle": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -161,8 +161,8 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["styles/app"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["styles/app"], () => (__webpack_require__("./resources/styles/app.scss")))
+/******/ 	__webpack_require__.O(undefined, ["build/bundle"], () => (__webpack_require__("./resources/scripts/main.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["build/bundle"], () => (__webpack_require__("./resources/styles/main.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
