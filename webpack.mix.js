@@ -23,3 +23,4 @@ const mix = require("laravel-mix");
                 'resources/**/*.php',
             ],
         })
+        .disableSuccessNotifications();
