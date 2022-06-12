@@ -1,20 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,700,900);
 @charset "UTF-8";
-.Layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-.Layout_main {
-  flex: 1;
-}
-
-.wrapper {
-  background-color: royalblue;
-  display: flex;
-  flex-direction: column;
-  height: 500px;
-}
-
 /* ========================================================================
    Component: Base
  ========================================================================== */
@@ -25,10 +11,10 @@
  */
 html {
   /* 1 */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 100%;
   font-weight: normal;
-  line-height: 1.5;
+  line-height: 1.35;
   /* 2 */
   -webkit-text-size-adjust: 100%;
   /* 3 */
@@ -50,9 +36,10 @@ body {
  */
 a,
 .uk-link {
-  color: #DA7D02;
+  color: #1e87f0;
   text-decoration: none;
   cursor: pointer;
+  transition: color 0.25s ease-in-out;
 }
 
 a:hover,
@@ -253,7 +240,7 @@ h6, .uk-h6,
 .uk-heading-xlarge,
 .uk-heading-2xlarge {
   margin: 0 0 20px 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Montserrat", sans-serif;
   font-weight: normal;
   color: #333;
   text-transform: none;
@@ -271,7 +258,7 @@ h6, .uk-h6,
 * + .uk-heading-large,
 * + .uk-heading-xlarge,
 * + .uk-heading-2xlarge {
-  margin-top: 40px;
+  margin-top: 0;
 }
 
 /*
@@ -279,32 +266,32 @@ h6, .uk-h6,
  */
 h1, .uk-h1 {
   font-size: 2.23125rem;
-  line-height: 1.2;
+  line-height: 1.35;
 }
 
 h2, .uk-h2 {
   font-size: 1.7rem;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 h3, .uk-h3 {
   font-size: 1.5rem;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 h4, .uk-h4 {
   font-size: 1.25rem;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 h5, .uk-h5 {
   font-size: 16px;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 h6, .uk-h6 {
   font-size: 0.875rem;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 /* Tablet landscape and bigger */
@@ -321,7 +308,7 @@ h6, .uk-h6 {
  ========================================================================== */
 ul,
 ol {
-  padding-left: 30px;
+  padding-left: 0;
 }
 
 /*
@@ -2151,7 +2138,7 @@ select.uk-form-width-xsmall {
  * 9. Align text if button has a width
  * 10. Required for `a`.
  */
-.uk-button {
+.uk-button, .Button {
   /* 1 */
   margin: 0;
   /* 2 */
@@ -2178,25 +2165,30 @@ select.uk-form-width-xsmall {
   text-align: center;
   /* 10 */
   text-decoration: none;
-  text-transform: uppercase;
-  transition: 0.1s ease-in-out;
-  transition-property: color, background-color, border-color;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: toRem(14px);
+  line-height: 49px;
+  transition: background-color 0.25s ease-in-out;
 }
 
-.uk-button:not(:disabled) {
+.uk-button:not(:disabled), .Button:not(:disabled) {
   cursor: pointer;
 }
 
 /*
  * Remove the inner border and padding in Firefox.
  */
-.uk-button::-moz-focus-inner {
+.uk-button::-moz-focus-inner, .Button::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
 
 /* Hover */
-.uk-button:hover {
+.uk-button:hover, .Button:hover {
   /* 9 */
   text-decoration: none;
 }
@@ -2231,23 +2223,24 @@ select.uk-form-width-xsmall {
 /*
  * Primary
  */
-.uk-button-primary {
-  background-color: #1e87f0;
-  color: #fff;
+.uk-button-primary, .Button--primary {
+  background-color: #029F59;
+  color: white;
   border: 1px solid transparent;
 }
 
 /* Hover */
-.uk-button-primary:hover {
-  background-color: #0f7ae5;
-  color: #fff;
+.uk-button-primary:hover, .Button--primary:hover {
+  background-color: #02864b;
+  color: white;
 }
 
 /* OnClick + Active */
-.uk-button-primary:active,
-.uk-button-primary.uk-active {
-  background-color: #0e6ecd;
-  color: #fff;
+.uk-button-primary:active, .Button--primary:active,
+.uk-button-primary.uk-active,
+.uk-active.Button--primary {
+  background-color: #016d3d;
+  color: white;
 }
 
 /*
@@ -2300,6 +2293,7 @@ select.uk-form-width-xsmall {
  */
 .uk-button-default:disabled,
 .uk-button-primary:disabled,
+.Button--primary:disabled,
 .uk-button-secondary:disabled,
 .uk-button-danger:disabled {
   background-color: transparent;
@@ -2410,8 +2404,9 @@ select.uk-form-width-xsmall {
 /*
  * Collapse border
  */
-.uk-button-group > .uk-button:nth-child(n+2),
-.uk-button-group > div:nth-child(n+2) .uk-button {
+.uk-button-group > .uk-button:nth-child(n+2), .uk-button-group > .Button:nth-child(n+2),
+.uk-button-group > div:nth-child(n+2) .uk-button,
+.uk-button-group > div:nth-child(n+2) .Button {
   margin-left: -1px;
 }
 
@@ -2421,9 +2416,11 @@ select.uk-form-width-xsmall {
  * the active state will not work if you click the icon inside the button
  * Workaround: Just use a `button` or `input` element as button
  */
-.uk-button-group .uk-button:hover,
+.uk-button-group .uk-button:hover, .uk-button-group .Button:hover,
 .uk-button-group .uk-button:active,
-.uk-button-group .uk-button.uk-active {
+.uk-button-group .Button:active,
+.uk-button-group .uk-button.uk-active,
+.uk-button-group .uk-active.Button {
   position: relative;
   z-index: 1;
 }
@@ -2604,42 +2601,42 @@ select.uk-form-width-xsmall {
  * 1. Box sizing has to be `content-box` so the max-width is always the same and
  *    unaffected by the padding on different breakpoints. It's important for the size modifiers.
  */
-.uk-container {
+.uk-container, .Container {
   display: flow-root;
   /* 1 */
   box-sizing: content-box;
-  max-width: 1200px;
+  max-width: 1264px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 /* Phone landscape and bigger */
 @media (min-width: 640px) {
-  .uk-container {
-    padding-left: 30px;
-    padding-right: 30px;
+  .uk-container, .Container {
+    padding-left: 32px;
+    padding-right: 32px;
   }
 }
 /* Tablet landscape and bigger */
 @media (min-width: 960px) {
-  .uk-container {
-    padding-left: 40px;
-    padding-right: 40px;
+  .uk-container, .Container {
+    padding-left: 80px;
+    padding-right: 80px;
   }
 }
 /*
  * Remove margin from the last-child
  */
-.uk-container > :last-child {
+.uk-container > :last-child, .Container > :last-child {
   margin-bottom: 0;
 }
 
 /*
  * Remove padding from nested containers
  */
-.uk-container .uk-container {
+.uk-container .uk-container, .Container .uk-container, .uk-container .Container, .Container .Container {
   padding-left: 0;
   padding-right: 0;
 }
@@ -2647,11 +2644,11 @@ select.uk-form-width-xsmall {
 /* Size modifier
  ========================================================================== */
 .uk-container-xsmall {
-  max-width: 750px;
+  max-width: 480px;
 }
 
 .uk-container-small {
-  max-width: 900px;
+  max-width: 700px;
 }
 
 .uk-container-large {
@@ -2683,39 +2680,39 @@ select.uk-form-width-xsmall {
 @media (min-width: 640px) {
   .uk-container-expand-left.uk-container-xsmall,
 .uk-container-expand-right.uk-container-xsmall {
-    max-width: calc(50% + (750px / 2) - 30px);
+    max-width: calc(50% + (480px / 2) - 32px);
   }
 
   .uk-container-expand-left.uk-container-small,
 .uk-container-expand-right.uk-container-small {
-    max-width: calc(50% + (900px / 2) - 30px);
+    max-width: calc(50% + (700px / 2) - 32px);
   }
 }
 /* Tablet landscape and bigger */
 @media (min-width: 960px) {
   .uk-container-expand-left,
 .uk-container-expand-right {
-    max-width: calc(50% + (1200px / 2) - 40px);
+    max-width: calc(50% + (1264px / 2) - 80px);
   }
 
   .uk-container-expand-left.uk-container-xsmall,
 .uk-container-expand-right.uk-container-xsmall {
-    max-width: calc(50% + (750px / 2) - 40px);
+    max-width: calc(50% + (480px / 2) - 80px);
   }
 
   .uk-container-expand-left.uk-container-small,
 .uk-container-expand-right.uk-container-small {
-    max-width: calc(50% + (900px / 2) - 40px);
+    max-width: calc(50% + (700px / 2) - 80px);
   }
 
   .uk-container-expand-left.uk-container-large,
 .uk-container-expand-right.uk-container-large {
-    max-width: calc(50% + (1400px / 2) - 40px);
+    max-width: calc(50% + (1400px / 2) - 80px);
   }
 
   .uk-container-expand-left.uk-container-xlarge,
 .uk-container-expand-right.uk-container-xlarge {
-    max-width: calc(50% + (1600px / 2) - 40px);
+    max-width: calc(50% + (1600px / 2) - 80px);
   }
 }
 /* Item
@@ -2726,45 +2723,45 @@ select.uk-form-width-xsmall {
  */
 .uk-container-item-padding-remove-left,
 .uk-container-item-padding-remove-right {
-  width: calc(100% + 15px);
+  width: calc(100% + 16px);
 }
 
 .uk-container-item-padding-remove-left {
-  margin-left: -15px;
+  margin-left: -16px;
 }
 
 .uk-container-item-padding-remove-right {
-  margin-right: -15px;
+  margin-right: -16px;
 }
 
 /* Phone landscape and bigger */
 @media (min-width: 640px) {
   .uk-container-item-padding-remove-left,
 .uk-container-item-padding-remove-right {
-    width: calc(100% + 30px);
+    width: calc(100% + 32px);
   }
 
   .uk-container-item-padding-remove-left {
-    margin-left: -30px;
+    margin-left: -32px;
   }
 
   .uk-container-item-padding-remove-right {
-    margin-right: -30px;
+    margin-right: -32px;
   }
 }
 /* Tablet landscape and bigger */
 @media (min-width: 960px) {
   .uk-container-item-padding-remove-left,
 .uk-container-item-padding-remove-right {
-    width: calc(100% + 40px);
+    width: calc(100% + 80px);
   }
 
   .uk-container-item-padding-remove-left {
-    margin-left: -40px;
+    margin-left: -80px;
   }
 
   .uk-container-item-padding-remove-right {
-    margin-right: -40px;
+    margin-right: -80px;
   }
 }
 /* ========================================================================
@@ -5876,7 +5873,7 @@ ul.uk-nav-sub {
   padding: 0 15px;
   /* 4 */
   font-size: 0.875rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Open Sans", sans-serif;
   /* 5 */
   text-decoration: none;
 }
@@ -6126,15 +6123,19 @@ ul.uk-nav-sub {
 /*
  * Navbar
  */
-.uk-container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-nav:first-child,
+.uk-container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-nav:first-child, .Container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-nav:first-child,
 .uk-container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-item:first-child,
-.uk-container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-toggle:first-child {
+.Container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-item:first-child,
+.uk-container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-toggle:first-child,
+.Container > :not(.uk-navbar-justified) > .uk-navbar-left .uk-navbar-toggle:first-child {
   margin-left: -15px;
 }
 
-.uk-container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-nav:last-child,
+.uk-container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-nav:last-child, .Container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-nav:last-child,
 .uk-container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-item:last-child,
-.uk-container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-toggle:last-child {
+.Container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-item:last-child,
+.uk-container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-toggle:last-child,
+.Container > :not(.uk-navbar-justified) > .uk-navbar-right .uk-navbar-toggle:last-child {
   margin-right: -15px;
 }
 
@@ -9498,7 +9499,7 @@ iframe[data-uk-cover] {
  */
 .uk-logo {
   font-size: 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Open Sans", sans-serif;
   color: #333;
   /* 1 */
   text-decoration: none;
@@ -11432,26 +11433,37 @@ iframe[data-uk-cover] {
   color: #fff;
   border-color: #fff;
 }
-.uk-light .uk-button-primary, .uk-section-primary:not(.uk-preserve-color) .uk-button-primary, .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary, .uk-tile-primary:not(.uk-preserve-color) .uk-button-primary, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-primary, .uk-card-primary.uk-card-body .uk-button-primary, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-primary, .uk-card-secondary.uk-card-body .uk-button-primary, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-primary, .uk-overlay-primary .uk-button-primary, .uk-offcanvas-bar .uk-button-primary {
+.uk-light .uk-button-primary, .uk-light .Button--primary, .uk-section-primary:not(.uk-preserve-color) .uk-button-primary, .uk-section-primary:not(.uk-preserve-color) .Button--primary, .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary, .uk-section-secondary:not(.uk-preserve-color) .Button--primary, .uk-tile-primary:not(.uk-preserve-color) .uk-button-primary, .uk-tile-primary:not(.uk-preserve-color) .Button--primary, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-primary, .uk-tile-secondary:not(.uk-preserve-color) .Button--primary, .uk-card-primary.uk-card-body .uk-button-primary, .uk-card-primary.uk-card-body .Button--primary, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-primary, .uk-card-primary > :not([class*=uk-card-media]) .Button--primary, .uk-card-secondary.uk-card-body .uk-button-primary, .uk-card-secondary.uk-card-body .Button--primary, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-primary, .uk-card-secondary > :not([class*=uk-card-media]) .Button--primary, .uk-overlay-primary .uk-button-primary, .uk-overlay-primary .Button--primary, .uk-offcanvas-bar .uk-button-primary, .uk-offcanvas-bar .Button--primary {
   background-color: #fff;
   color: #666;
 }
-.uk-light .uk-button-primary:hover, .uk-section-primary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-tile-primary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-card-primary.uk-card-body .uk-button-primary:hover, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-primary:hover, .uk-card-secondary.uk-card-body .uk-button-primary:hover, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-primary:hover, .uk-overlay-primary .uk-button-primary:hover, .uk-offcanvas-bar .uk-button-primary:hover {
+.uk-light .uk-button-primary:hover, .uk-light .Button--primary:hover, .uk-section-primary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-section-primary:not(.uk-preserve-color) .Button--primary:hover, .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-section-secondary:not(.uk-preserve-color) .Button--primary:hover, .uk-tile-primary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-tile-primary:not(.uk-preserve-color) .Button--primary:hover, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-primary:hover, .uk-tile-secondary:not(.uk-preserve-color) .Button--primary:hover, .uk-card-primary.uk-card-body .uk-button-primary:hover, .uk-card-primary.uk-card-body .Button--primary:hover, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-primary:hover, .uk-card-primary > :not([class*=uk-card-media]) .Button--primary:hover, .uk-card-secondary.uk-card-body .uk-button-primary:hover, .uk-card-secondary.uk-card-body .Button--primary:hover, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-primary:hover, .uk-card-secondary > :not([class*=uk-card-media]) .Button--primary:hover, .uk-overlay-primary .uk-button-primary:hover, .uk-overlay-primary .Button--primary:hover, .uk-offcanvas-bar .uk-button-primary:hover, .uk-offcanvas-bar .Button--primary:hover {
   background-color: #f2f2f2;
   color: #666;
 }
-.uk-light .uk-button-primary:active, .uk-section-primary:not(.uk-preserve-color) .uk-button-primary:active, .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary:active, .uk-tile-primary:not(.uk-preserve-color) .uk-button-primary:active, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-primary:active, .uk-card-primary.uk-card-body .uk-button-primary:active, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-primary:active, .uk-card-secondary.uk-card-body .uk-button-primary:active, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-primary:active, .uk-overlay-primary .uk-button-primary:active, .uk-offcanvas-bar .uk-button-primary:active,
+.uk-light .uk-button-primary:active, .uk-light .Button--primary:active, .uk-section-primary:not(.uk-preserve-color) .uk-button-primary:active, .uk-section-primary:not(.uk-preserve-color) .Button--primary:active, .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary:active, .uk-section-secondary:not(.uk-preserve-color) .Button--primary:active, .uk-tile-primary:not(.uk-preserve-color) .uk-button-primary:active, .uk-tile-primary:not(.uk-preserve-color) .Button--primary:active, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-primary:active, .uk-tile-secondary:not(.uk-preserve-color) .Button--primary:active, .uk-card-primary.uk-card-body .uk-button-primary:active, .uk-card-primary.uk-card-body .Button--primary:active, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-primary:active, .uk-card-primary > :not([class*=uk-card-media]) .Button--primary:active, .uk-card-secondary.uk-card-body .uk-button-primary:active, .uk-card-secondary.uk-card-body .Button--primary:active, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-primary:active, .uk-card-secondary > :not([class*=uk-card-media]) .Button--primary:active, .uk-overlay-primary .uk-button-primary:active, .uk-overlay-primary .Button--primary:active, .uk-offcanvas-bar .uk-button-primary:active, .uk-offcanvas-bar .Button--primary:active,
 .uk-light .uk-button-primary.uk-active,
+.uk-light .uk-active.Button--primary,
 .uk-section-primary:not(.uk-preserve-color) .uk-button-primary.uk-active,
+.uk-section-primary:not(.uk-preserve-color) .uk-active.Button--primary,
 .uk-section-secondary:not(.uk-preserve-color) .uk-button-primary.uk-active,
+.uk-section-secondary:not(.uk-preserve-color) .uk-active.Button--primary,
 .uk-tile-primary:not(.uk-preserve-color) .uk-button-primary.uk-active,
+.uk-tile-primary:not(.uk-preserve-color) .uk-active.Button--primary,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-button-primary.uk-active,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-active.Button--primary,
 .uk-card-primary.uk-card-body .uk-button-primary.uk-active,
+.uk-card-primary.uk-card-body .uk-active.Button--primary,
 .uk-card-primary > :not([class*=uk-card-media]) .uk-button-primary.uk-active,
+.uk-card-primary > :not([class*=uk-card-media]) .uk-active.Button--primary,
 .uk-card-secondary.uk-card-body .uk-button-primary.uk-active,
+.uk-card-secondary.uk-card-body .uk-active.Button--primary,
 .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-primary.uk-active,
+.uk-card-secondary > :not([class*=uk-card-media]) .uk-active.Button--primary,
 .uk-overlay-primary .uk-button-primary.uk-active,
-.uk-offcanvas-bar .uk-button-primary.uk-active {
+.uk-overlay-primary .uk-active.Button--primary,
+.uk-offcanvas-bar .uk-button-primary.uk-active,
+.uk-offcanvas-bar .uk-active.Button--primary {
   background-color: #e6e6e6;
   color: #666;
 }
@@ -11862,4 +11874,55 @@ h3 {
 h3 {
     page-break-after: avoid;
   }
+}
+.PrimaryPhone {
+  display: flex;
+  font-size: toRem(14px);
+  line-height: 1.2;
+  color: #254741;
+}
+.PrimaryPhone:hover, .PrimaryPhone:focus, .PrimaryPhone:active {
+  color: black;
+}
+.PrimaryPhone_icon {
+  margin-right: 8px;
+}
+
+.Layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.Layout_main {
+  flex: 1;
+}
+
+.SiteNav {
+  display: flex;
+  list-style: none;
+}
+.SiteNav__listItem:not(:last-child) {
+  margin-right: 24px;
+}
+.SiteNav__item {
+  line-height: 1.2;
+  color: #666666;
+}
+.SiteNav__item:hover, .SiteNav__item:focus, .SiteNav__item:active {
+  color: black;
+}
+
+.Header {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  display: flex;
+  align-items: center;
+}
+.Header__logo {
+  width: 160px;
+  margin-right: 80px;
+}
+.Header__phone {
+  margin-left: auto;
+  margin-right: 24px;
 }

@@ -8,9 +8,6 @@
     }
 }
 
-.wrapper {
-    background-color: royalblue;
-    display: flex;
-    flex-direction: column;
-    height: 500px;
+.Container {
+    @extend .uk-container;
 }

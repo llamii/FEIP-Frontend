@@ -1,0 +1,14 @@
+.Header {
+    padding-y: 24px;
+    display: flex;
+    align-items: center;
+
+    &__logo {
+        width: 160px;
+        margin-right: 80px;
+    }
+
+    &__phone {
+        margin-x: auto 24px;
+    }
+}

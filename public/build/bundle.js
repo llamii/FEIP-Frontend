@@ -11,7 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _uikit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./uikit */ "./resources/scripts/uikit.js");
 
-console.log('Hello from "/resources/js/app.js" !!!');
+console.log('Hello from "/resources/js/main.js" !!!');
 
 /***/ }),
 
@@ -28,7 +28,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var uikit_dist_js_uikit_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! uikit/dist/js/uikit-core */ "./node_modules/uikit/dist/js/uikit-core.js");
 /* harmony import */ var uikit_dist_js_uikit_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(uikit_dist_js_uikit_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var uikit_dist_js_components_lightbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! uikit/dist/js/components/lightbox */ "./node_modules/uikit/dist/js/components/lightbox.js");
+/* harmony import */ var uikit_dist_js_components_lightbox__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(uikit_dist_js_components_lightbox__WEBPACK_IMPORTED_MODULE_1__);
 
+
+uikit_dist_js_uikit_core__WEBPACK_IMPORTED_MODULE_0___default().component('lightbox', (uikit_dist_js_components_lightbox__WEBPACK_IMPORTED_MODULE_1___default()));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((uikit_dist_js_uikit_core__WEBPACK_IMPORTED_MODULE_0___default()));
 
 /***/ }),
@@ -42,6 +46,1639 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/dist/js/components/lightbox.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/uikit/dist/js/components/lightbox.js ***!
+  \***********************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+/*! UIkit 3.14.3 | https://www.getuikit.com | (c) 2014 - 2022 YOOtheme | MIT License */
+
+(function (global, factory) {
+     true ? module.exports = factory(__webpack_require__(/*! uikit-util */ "./node_modules/uikit/src/js/util/index.js")) :
+    0;
+})(this, (function (uikitUtil) { 'use strict';
+
+    var Animations$1 = {
+      slide: {
+        show(dir) {
+          return [{ transform: translate(dir * -100) }, { transform: translate() }];
+        },
+
+        percent(current) {
+          return translated(current);
+        },
+
+        translate(percent, dir) {
+          return [
+          { transform: translate(dir * -100 * percent) },
+          { transform: translate(dir * 100 * (1 - percent)) }];
+
+        } } };
+
+
+
+    function translated(el) {
+      return Math.abs(uikitUtil.css(el, 'transform').split(',')[4] / el.offsetWidth) || 0;
+    }
+
+    function translate(value, unit) {if (value === void 0) {value = 0;}if (unit === void 0) {unit = '%';}
+      value += value ? unit : '';
+      return "translate3d(" + value + ", 0, 0)";
+    }
+
+    function scale3d(value) {
+      return "scale3d(" + value + ", " + value + ", 1)";
+    }
+
+    var Animations = {
+      ...Animations$1,
+      fade: {
+        show() {
+          return [{ opacity: 0 }, { opacity: 1 }];
+        },
+
+        percent(current) {
+          return 1 - uikitUtil.css(current, 'opacity');
+        },
+
+        translate(percent) {
+          return [{ opacity: 1 - percent }, { opacity: percent }];
+        } },
+
+
+      scale: {
+        show() {
+          return [
+          { opacity: 0, transform: scale3d(1 - 0.2) },
+          { opacity: 1, transform: scale3d(1) }];
+
+        },
+
+        percent(current) {
+          return 1 - uikitUtil.css(current, 'opacity');
+        },
+
+        translate(percent) {
+          return [
+          { opacity: 1 - percent, transform: scale3d(1 - 0.2 * percent) },
+          { opacity: percent, transform: scale3d(1 - 0.2 + 0.2 * percent) }];
+
+        } } };
+
+    var Container = {
+      props: {
+        container: Boolean },
+
+
+      data: {
+        container: true },
+
+
+      computed: {
+        container(_ref) {let { container } = _ref;
+          return container === true && this.$container || container && uikitUtil.$(container);
+        } } };
+
+    var Class = {
+      connected() {
+        !uikitUtil.hasClass(this.$el, this.$name) && uikitUtil.addClass(this.$el, this.$name);
+      } };
+
+    var Togglable = {
+      props: {
+        cls: Boolean,
+        animation: 'list',
+        duration: Number,
+        velocity: Number,
+        origin: String,
+        transition: String },
+
+
+      data: {
+        cls: false,
+        animation: [false],
+        duration: 200,
+        velocity: 0.2,
+        origin: false,
+        transition: 'ease',
+        clsEnter: 'uk-togglabe-enter',
+        clsLeave: 'uk-togglabe-leave',
+
+        initProps: {
+          overflow: '',
+          height: '',
+          paddingTop: '',
+          paddingBottom: '',
+          marginTop: '',
+          marginBottom: '',
+          boxShadow: '' },
+
+
+        hideProps: {
+          overflow: 'hidden',
+          height: 0,
+          paddingTop: 0,
+          paddingBottom: 0,
+          marginTop: 0,
+          marginBottom: 0,
+          boxShadow: 'none' } },
+
+
+
+      computed: {
+        hasAnimation(_ref) {let { animation } = _ref;
+          return !!animation[0];
+        },
+
+        hasTransition(_ref2) {let { animation } = _ref2;
+          return this.hasAnimation && animation[0] === true;
+        } },
+
+
+      methods: {
+        toggleElement(targets, toggle, animate) {
+          return new Promise((resolve) =>
+          Promise.all(
+          uikitUtil.toNodes(targets).map((el) => {
+            const show = uikitUtil.isBoolean(toggle) ? toggle : !this.isToggled(el);
+
+            if (!uikitUtil.trigger(el, "before" + (show ? 'show' : 'hide'), [this])) {
+              return Promise.reject();
+            }
+
+            if (!animate) {
+              uikitUtil.Animation.cancel(el);
+              uikitUtil.Transition.cancel(el);
+            }
+
+            const promise = (
+            uikitUtil.isFunction(animate) ?
+            animate :
+            animate === false || !this.hasAnimation ?
+            this._toggle :
+            this.hasTransition ?
+            toggleHeight(this) :
+            toggleAnimation(this))(
+            el, show);
+
+            const cls = show ? this.clsEnter : this.clsLeave;
+
+            uikitUtil.addClass(el, cls);
+
+            uikitUtil.trigger(el, show ? 'show' : 'hide', [this]);
+
+            const done = () => {
+              uikitUtil.removeClass(el, cls);
+              uikitUtil.trigger(el, show ? 'shown' : 'hidden', [this]);
+              this.$update(el);
+            };
+
+            return promise ?
+            promise.then(done, () => {
+              uikitUtil.removeClass(el, cls);
+              return Promise.reject();
+            }) :
+            done();
+          })).
+          then(resolve, uikitUtil.noop));
+
+        },
+
+        isToggled(el) {if (el === void 0) {el = this.$el;}
+          [el] = uikitUtil.toNodes(el);
+          return uikitUtil.hasClass(el, this.clsEnter) ?
+          true :
+          uikitUtil.hasClass(el, this.clsLeave) ?
+          false :
+          this.cls ?
+          uikitUtil.hasClass(el, this.cls.split(' ')[0]) :
+          uikitUtil.isVisible(el);
+        },
+
+        _toggle(el, toggled) {
+          if (!el) {
+            return;
+          }
+
+          toggled = Boolean(toggled);
+
+          let changed;
+          if (this.cls) {
+            changed = uikitUtil.includes(this.cls, ' ') || toggled !== uikitUtil.hasClass(el, this.cls);
+            changed && uikitUtil.toggleClass(el, this.cls, uikitUtil.includes(this.cls, ' ') ? undefined : toggled);
+          } else {
+            changed = toggled === el.hidden;
+            changed && (el.hidden = !toggled);
+          }
+
+          uikitUtil.$$('[autofocus]', el).some((el) => uikitUtil.isVisible(el) ? el.focus() || true : el.blur());
+
+          if (changed) {
+            uikitUtil.trigger(el, 'toggled', [toggled, this]);
+            this.$update(el);
+          }
+        } } };
+
+
+
+    function toggleHeight(_ref3)
+
+
+
+
+
+
+
+    {let { isToggled, duration, velocity, initProps, hideProps, transition, _toggle } = _ref3;
+      return (el, show) => {
+        const inProgress = uikitUtil.Transition.inProgress(el);
+        const inner = el.hasChildNodes() ?
+        uikitUtil.toFloat(uikitUtil.css(el.firstElementChild, 'marginTop')) +
+        uikitUtil.toFloat(uikitUtil.css(el.lastElementChild, 'marginBottom')) :
+        0;
+        const currentHeight = uikitUtil.isVisible(el) ? uikitUtil.height(el) + (inProgress ? 0 : inner) : 0;
+
+        uikitUtil.Transition.cancel(el);
+
+        if (!isToggled(el)) {
+          _toggle(el, true);
+        }
+
+        uikitUtil.height(el, '');
+
+        // Update child components first
+        uikitUtil.fastdom.flush();
+
+        const endHeight = uikitUtil.height(el) + (inProgress ? 0 : inner);
+        duration = velocity * el.offsetHeight + duration;
+
+        uikitUtil.height(el, currentHeight);
+
+        return (
+        show ?
+        uikitUtil.Transition.start(
+        el,
+        { ...initProps, overflow: 'hidden', height: endHeight },
+        Math.round(duration * (1 - currentHeight / endHeight)),
+        transition) :
+
+        uikitUtil.Transition.start(
+        el,
+        hideProps,
+        Math.round(duration * (currentHeight / endHeight)),
+        transition).
+        then(() => _toggle(el, false))).
+        then(() => uikitUtil.css(el, initProps));
+      };
+    }
+
+    function toggleAnimation(cmp) {
+      return (el, show) => {
+        uikitUtil.Animation.cancel(el);
+
+        const { animation, duration, _toggle } = cmp;
+
+        if (show) {
+          _toggle(el, true);
+          return uikitUtil.Animation.in(el, animation[0], duration, cmp.origin);
+        }
+
+        return uikitUtil.Animation.out(el, animation[1] || animation[0], duration, cmp.origin).then(() =>
+        _toggle(el, false));
+
+      };
+    }
+
+    const active = [];
+
+    var Modal = {
+      mixins: [Class, Container, Togglable],
+
+      props: {
+        selPanel: String,
+        selClose: String,
+        escClose: Boolean,
+        bgClose: Boolean,
+        stack: Boolean },
+
+
+      data: {
+        cls: 'uk-open',
+        escClose: true,
+        bgClose: true,
+        overlay: true,
+        stack: false },
+
+
+      computed: {
+        panel(_ref, $el) {let { selPanel } = _ref;
+          return uikitUtil.$(selPanel, $el);
+        },
+
+        transitionElement() {
+          return this.panel;
+        },
+
+        bgClose(_ref2) {let { bgClose } = _ref2;
+          return bgClose && this.panel;
+        } },
+
+
+      beforeDisconnect() {
+        if (uikitUtil.includes(active, this)) {
+          this.toggleElement(this.$el, false, false);
+        }
+      },
+
+      events: [
+      {
+        name: 'click',
+
+        delegate() {
+          return this.selClose;
+        },
+
+        handler(e) {
+          e.preventDefault();
+          this.hide();
+        } },
+
+
+      {
+        name: 'toggle',
+
+        self: true,
+
+        handler(e) {
+          if (e.defaultPrevented) {
+            return;
+          }
+
+          e.preventDefault();
+
+          if (this.isToggled() === uikitUtil.includes(active, this)) {
+            this.toggle();
+          }
+        } },
+
+
+      {
+        name: 'beforeshow',
+
+        self: true,
+
+        handler(e) {
+          if (uikitUtil.includes(active, this)) {
+            return false;
+          }
+
+          if (!this.stack && active.length) {
+            Promise.all(active.map((modal) => modal.hide())).then(this.show);
+            e.preventDefault();
+          } else {
+            active.push(this);
+          }
+        } },
+
+
+      {
+        name: 'show',
+
+        self: true,
+
+        handler() {
+          const docEl = document.documentElement;
+
+          if (uikitUtil.width(window) > docEl.clientWidth && this.overlay) {
+            uikitUtil.css(document.body, 'overflowY', 'scroll');
+          }
+
+          if (this.stack) {
+            uikitUtil.css(this.$el, 'zIndex', uikitUtil.toFloat(uikitUtil.css(this.$el, 'zIndex')) + active.length);
+          }
+
+          uikitUtil.addClass(docEl, this.clsPage);
+
+          if (this.bgClose) {
+            uikitUtil.once(
+            this.$el,
+            'hide',
+            uikitUtil.on(document, uikitUtil.pointerDown, (_ref3) => {let { target } = _ref3;
+              if (
+              uikitUtil.last(active) !== this ||
+              this.overlay && !uikitUtil.within(target, this.$el) ||
+              uikitUtil.within(target, this.panel))
+              {
+                return;
+              }
+
+              uikitUtil.once(
+              document,
+              uikitUtil.pointerUp + " " + uikitUtil.pointerCancel + " scroll",
+              (_ref4) => {let { defaultPrevented, type, target: newTarget } = _ref4;
+                if (
+                !defaultPrevented &&
+                type === uikitUtil.pointerUp &&
+                target === newTarget)
+                {
+                  this.hide();
+                }
+              },
+              true);
+
+            }),
+            { self: true });
+
+          }
+
+          if (this.escClose) {
+            uikitUtil.once(
+            this.$el,
+            'hide',
+            uikitUtil.on(document, 'keydown', (e) => {
+              if (e.keyCode === 27 && uikitUtil.last(active) === this) {
+                this.hide();
+              }
+            }),
+            { self: true });
+
+          }
+        } },
+
+
+      {
+        name: 'shown',
+
+        self: true,
+
+        handler() {
+          if (!uikitUtil.isFocusable(this.$el)) {
+            uikitUtil.attr(this.$el, 'tabindex', '-1');
+          }
+
+          if (!uikitUtil.$(':focus', this.$el)) {
+            this.$el.focus();
+          }
+        } },
+
+
+      {
+        name: 'hidden',
+
+        self: true,
+
+        handler() {
+          if (uikitUtil.includes(active, this)) {
+            active.splice(active.indexOf(this), 1);
+          }
+
+          if (!active.length) {
+            uikitUtil.css(document.body, 'overflowY', '');
+          }
+
+          uikitUtil.css(this.$el, 'zIndex', '');
+
+          if (!active.some((modal) => modal.clsPage === this.clsPage)) {
+            uikitUtil.removeClass(document.documentElement, this.clsPage);
+          }
+        } }],
+
+
+
+      methods: {
+        toggle() {
+          return this.isToggled() ? this.hide() : this.show();
+        },
+
+        show() {
+          if (this.container && uikitUtil.parent(this.$el) !== this.container) {
+            uikitUtil.append(this.container, this.$el);
+            return new Promise((resolve) =>
+            requestAnimationFrame(() => this.show().then(resolve)));
+
+          }
+
+          return this.toggleElement(this.$el, true, animate(this));
+        },
+
+        hide() {
+          return this.toggleElement(this.$el, false, animate(this));
+        } } };
+
+
+
+    function animate(_ref5) {let { transitionElement, _toggle } = _ref5;
+      return (el, show) =>
+      new Promise((resolve, reject) =>
+      uikitUtil.once(el, 'show hide', () => {
+        el._reject == null ? void 0 : el._reject();
+        el._reject = reject;
+
+        _toggle(el, show);
+
+        const off = uikitUtil.once(
+        transitionElement,
+        'transitionstart',
+        () => {
+          uikitUtil.once(transitionElement, 'transitionend transitioncancel', resolve, {
+            self: true });
+
+          clearTimeout(timer);
+        },
+        { self: true });
+
+
+        const timer = setTimeout(() => {
+          off();
+          resolve();
+        }, toMs(uikitUtil.css(transitionElement, 'transitionDuration')));
+      })).
+      then(() => delete el._reject);
+    }
+
+    function toMs(time) {
+      return time ? uikitUtil.endsWith(time, 'ms') ? uikitUtil.toFloat(time) : uikitUtil.toFloat(time) * 1000 : 0;
+    }
+
+    function Transitioner(prev, next, dir, _ref) {let { animation, easing } = _ref;
+      const { percent, translate, show = uikitUtil.noop } = animation;
+      const props = show(dir);
+      const deferred = new uikitUtil.Deferred();
+
+      return {
+        dir,
+
+        show(duration, percent, linear) {if (percent === void 0) {percent = 0;}
+          const timing = linear ? 'linear' : easing;
+          duration -= Math.round(duration * uikitUtil.clamp(percent, -1, 1));
+
+          this.translate(percent);
+
+          triggerUpdate(next, 'itemin', { percent, duration, timing, dir });
+          triggerUpdate(prev, 'itemout', { percent: 1 - percent, duration, timing, dir });
+
+          Promise.all([
+          uikitUtil.Transition.start(next, props[1], duration, timing),
+          uikitUtil.Transition.start(prev, props[0], duration, timing)]).
+          then(() => {
+            this.reset();
+            deferred.resolve();
+          }, uikitUtil.noop);
+
+          return deferred.promise;
+        },
+
+        cancel() {
+          uikitUtil.Transition.cancel([next, prev]);
+        },
+
+        reset() {
+          for (const prop in props[0]) {
+            uikitUtil.css([next, prev], prop, '');
+          }
+        },
+
+        forward(duration, percent) {if (percent === void 0) {percent = this.percent();}
+          uikitUtil.Transition.cancel([next, prev]);
+          return this.show(duration, percent, true);
+        },
+
+        translate(percent) {
+          this.reset();
+
+          const props = translate(percent, dir);
+          uikitUtil.css(next, props[1]);
+          uikitUtil.css(prev, props[0]);
+          triggerUpdate(next, 'itemtranslatein', { percent, dir });
+          triggerUpdate(prev, 'itemtranslateout', { percent: 1 - percent, dir });
+        },
+
+        percent() {
+          return percent(prev || next, next, dir);
+        },
+
+        getDistance() {
+          return prev == null ? void 0 : prev.offsetWidth;
+        } };
+
+    }
+
+    function triggerUpdate(el, type, data) {
+      uikitUtil.trigger(el, uikitUtil.createEvent(type, false, false, data));
+    }
+
+    var Resize = {
+      connected() {var _this$$options$resize;
+        this.registerObserver(
+        uikitUtil.observeResize(((_this$$options$resize = this.$options.resizeTargets) == null ? void 0 : _this$$options$resize.call(this)) || this.$el, () =>
+        this.$emit('resize')));
+
+
+      } };
+
+    var SliderAutoplay = {
+      props: {
+        autoplay: Boolean,
+        autoplayInterval: Number,
+        pauseOnHover: Boolean },
+
+
+      data: {
+        autoplay: false,
+        autoplayInterval: 7000,
+        pauseOnHover: true },
+
+
+      connected() {
+        this.autoplay && this.startAutoplay();
+      },
+
+      disconnected() {
+        this.stopAutoplay();
+      },
+
+      update() {
+        uikitUtil.attr(this.slides, 'tabindex', '-1');
+      },
+
+      events: [
+      {
+        name: 'visibilitychange',
+
+        el() {
+          return document;
+        },
+
+        filter() {
+          return this.autoplay;
+        },
+
+        handler() {
+          if (document.hidden) {
+            this.stopAutoplay();
+          } else {
+            this.startAutoplay();
+          }
+        } }],
+
+
+
+      methods: {
+        startAutoplay() {
+          this.stopAutoplay();
+
+          this.interval = setInterval(
+          () =>
+          (!this.draggable || !uikitUtil.$(':focus', this.$el)) && (
+          !this.pauseOnHover || !uikitUtil.matches(this.$el, ':hover')) &&
+          !this.stack.length &&
+          this.show('next'),
+          this.autoplayInterval);
+
+        },
+
+        stopAutoplay() {
+          this.interval && clearInterval(this.interval);
+        } } };
+
+    var SliderDrag = {
+      props: {
+        draggable: Boolean },
+
+
+      data: {
+        draggable: true,
+        threshold: 10 },
+
+
+      created() {
+        for (const key of ['start', 'move', 'end']) {
+          const fn = this[key];
+          this[key] = (e) => {
+            const pos = uikitUtil.getEventPos(e).x * (uikitUtil.isRtl ? -1 : 1);
+
+            this.prevPos = pos === this.pos ? this.prevPos : this.pos;
+            this.pos = pos;
+
+            fn(e);
+          };
+        }
+      },
+
+      events: [
+      {
+        name: uikitUtil.pointerDown,
+
+        delegate() {
+          return this.selSlides;
+        },
+
+        handler(e) {
+          if (
+          !this.draggable ||
+          !uikitUtil.isTouch(e) && hasTextNodesOnly(e.target) ||
+          uikitUtil.closest(e.target, uikitUtil.selInput) ||
+          e.button > 0 ||
+          this.length < 2)
+          {
+            return;
+          }
+
+          this.start(e);
+        } },
+
+
+      {
+        name: 'dragstart',
+
+        handler(e) {
+          e.preventDefault();
+        } }],
+
+
+
+      methods: {
+        start() {
+          this.drag = this.pos;
+
+          if (this._transitioner) {
+            this.percent = this._transitioner.percent();
+            this.drag += this._transitioner.getDistance() * this.percent * this.dir;
+
+            this._transitioner.cancel();
+            this._transitioner.translate(this.percent);
+
+            this.dragging = true;
+
+            this.stack = [];
+          } else {
+            this.prevIndex = this.index;
+          }
+
+          uikitUtil.on(document, uikitUtil.pointerMove, this.move, { passive: false });
+
+          // 'input' event is triggered by video controls
+          uikitUtil.on(document, uikitUtil.pointerUp + " " + uikitUtil.pointerCancel + " input", this.end, true);
+
+          uikitUtil.css(this.list, 'userSelect', 'none');
+        },
+
+        move(e) {
+          const distance = this.pos - this.drag;
+
+          if (
+          distance === 0 ||
+          this.prevPos === this.pos ||
+          !this.dragging && Math.abs(distance) < this.threshold)
+          {
+            return;
+          }
+
+          // prevent click event
+          uikitUtil.css(this.list, 'pointerEvents', 'none');
+
+          e.cancelable && e.preventDefault();
+
+          this.dragging = true;
+          this.dir = distance < 0 ? 1 : -1;
+
+          const { slides } = this;
+          let { prevIndex } = this;
+          let dis = Math.abs(distance);
+          let nextIndex = this.getIndex(prevIndex + this.dir, prevIndex);
+          let width = this._getDistance(prevIndex, nextIndex) || slides[prevIndex].offsetWidth;
+
+          while (nextIndex !== prevIndex && dis > width) {
+            this.drag -= width * this.dir;
+
+            prevIndex = nextIndex;
+            dis -= width;
+            nextIndex = this.getIndex(prevIndex + this.dir, prevIndex);
+            width = this._getDistance(prevIndex, nextIndex) || slides[prevIndex].offsetWidth;
+          }
+
+          this.percent = dis / width;
+
+          const prev = slides[prevIndex];
+          const next = slides[nextIndex];
+          const changed = this.index !== nextIndex;
+          const edge = prevIndex === nextIndex;
+
+          let itemShown;
+
+          [this.index, this.prevIndex].
+          filter((i) => !uikitUtil.includes([nextIndex, prevIndex], i)).
+          forEach((i) => {
+            uikitUtil.trigger(slides[i], 'itemhidden', [this]);
+
+            if (edge) {
+              itemShown = true;
+              this.prevIndex = prevIndex;
+            }
+          });
+
+          if (this.index === prevIndex && this.prevIndex !== prevIndex || itemShown) {
+            uikitUtil.trigger(slides[this.index], 'itemshown', [this]);
+          }
+
+          if (changed) {
+            this.prevIndex = prevIndex;
+            this.index = nextIndex;
+
+            !edge && uikitUtil.trigger(prev, 'beforeitemhide', [this]);
+            uikitUtil.trigger(next, 'beforeitemshow', [this]);
+          }
+
+          this._transitioner = this._translate(Math.abs(this.percent), prev, !edge && next);
+
+          if (changed) {
+            !edge && uikitUtil.trigger(prev, 'itemhide', [this]);
+            uikitUtil.trigger(next, 'itemshow', [this]);
+          }
+        },
+
+        end() {
+          uikitUtil.off(document, uikitUtil.pointerMove, this.move, { passive: false });
+          uikitUtil.off(document, uikitUtil.pointerUp + " " + uikitUtil.pointerCancel + " input", this.end, true);
+
+          if (this.dragging) {
+            this.dragging = null;
+
+            if (this.index === this.prevIndex) {
+              this.percent = 1 - this.percent;
+              this.dir *= -1;
+              this._show(false, this.index, true);
+              this._transitioner = null;
+            } else {
+              const dirChange =
+              (uikitUtil.isRtl ? this.dir * (uikitUtil.isRtl ? 1 : -1) : this.dir) < 0 ===
+              this.prevPos > this.pos;
+              this.index = dirChange ? this.index : this.prevIndex;
+
+              if (dirChange) {
+                this.percent = 1 - this.percent;
+              }
+
+              this.show(
+              this.dir > 0 && !dirChange || this.dir < 0 && dirChange ?
+              'next' :
+              'previous',
+              true);
+
+            }
+          }
+
+          uikitUtil.css(this.list, { userSelect: '', pointerEvents: '' });
+
+          this.drag = this.percent = null;
+        } } };
+
+
+
+    function hasTextNodesOnly(el) {
+      return !el.children.length && el.childNodes.length;
+    }
+
+    var SliderNav = {
+      data: {
+        selNav: false },
+
+
+      computed: {
+        nav(_ref, $el) {let { selNav } = _ref;
+          return uikitUtil.$(selNav, $el);
+        },
+
+        selNavItem(_ref2) {let { attrItem } = _ref2;
+          return "[" + attrItem + "],[data-" + attrItem + "]";
+        },
+
+        navItems(_, $el) {
+          return uikitUtil.$$(this.selNavItem, $el);
+        } },
+
+
+      update: {
+        write() {
+          if (this.nav && this.length !== this.nav.children.length) {
+            uikitUtil.html(
+            this.nav,
+            this.slides.
+            map((_, i) => "<li " + this.attrItem + "=\"" + i + "\"><a href></a></li>").
+            join(''));
+
+          }
+
+          this.navItems.concat(this.nav).forEach((el) => el && (el.hidden = !this.maxIndex));
+
+          this.updateNav();
+        },
+
+        events: ['resize'] },
+
+
+      events: [
+      {
+        name: 'click',
+
+        delegate() {
+          return this.selNavItem;
+        },
+
+        handler(e) {
+          e.preventDefault();
+          this.show(uikitUtil.data(e.current, this.attrItem));
+        } },
+
+
+      {
+        name: 'itemshow',
+        handler: 'updateNav' }],
+
+
+
+      methods: {
+        updateNav() {
+          const i = this.getValidIndex();
+          for (const el of this.navItems) {
+            const cmd = uikitUtil.data(el, this.attrItem);
+
+            uikitUtil.toggleClass(el, this.clsActive, uikitUtil.toNumber(cmd) === i);
+            uikitUtil.toggleClass(
+            el,
+            'uk-invisible',
+            this.finite && (
+            cmd === 'previous' && i === 0 || cmd === 'next' && i >= this.maxIndex));
+
+          }
+        } } };
+
+    var Slider = {
+      mixins: [SliderAutoplay, SliderDrag, SliderNav, Resize],
+
+      props: {
+        clsActivated: Boolean,
+        easing: String,
+        index: Number,
+        finite: Boolean,
+        velocity: Number,
+        selSlides: String },
+
+
+      data: () => ({
+        easing: 'ease',
+        finite: false,
+        velocity: 1,
+        index: 0,
+        prevIndex: -1,
+        stack: [],
+        percent: 0,
+        clsActive: 'uk-active',
+        clsActivated: false,
+        Transitioner: false,
+        transitionOptions: {} }),
+
+
+      connected() {
+        this.prevIndex = -1;
+        this.index = this.getValidIndex(this.$props.index);
+        this.stack = [];
+      },
+
+      disconnected() {
+        uikitUtil.removeClass(this.slides, this.clsActive);
+      },
+
+      computed: {
+        duration(_ref, $el) {let { velocity } = _ref;
+          return speedUp($el.offsetWidth / velocity);
+        },
+
+        list(_ref2, $el) {let { selList } = _ref2;
+          return uikitUtil.$(selList, $el);
+        },
+
+        maxIndex() {
+          return this.length - 1;
+        },
+
+        selSlides(_ref3) {let { selList, selSlides } = _ref3;
+          return selList + " " + (selSlides || '> *');
+        },
+
+        slides: {
+          get() {
+            return uikitUtil.$$(this.selSlides, this.$el);
+          },
+
+          watch() {
+            this.$reset();
+          } },
+
+
+        length() {
+          return this.slides.length;
+        } },
+
+
+      methods: {
+        show(index, force) {if (force === void 0) {force = false;}
+          if (this.dragging || !this.length) {
+            return;
+          }
+
+          const { stack } = this;
+          const queueIndex = force ? 0 : stack.length;
+          const reset = () => {
+            stack.splice(queueIndex, 1);
+
+            if (stack.length) {
+              this.show(stack.shift(), true);
+            }
+          };
+
+          stack[force ? 'unshift' : 'push'](index);
+
+          if (!force && stack.length > 1) {
+            if (stack.length === 2) {
+              this._transitioner.forward(Math.min(this.duration, 200));
+            }
+
+            return;
+          }
+
+          const prevIndex = this.getIndex(this.index);
+          const prev = uikitUtil.hasClass(this.slides, this.clsActive) && this.slides[prevIndex];
+          const nextIndex = this.getIndex(index, this.index);
+          const next = this.slides[nextIndex];
+
+          if (prev === next) {
+            reset();
+            return;
+          }
+
+          this.dir = getDirection(index, prevIndex);
+          this.prevIndex = prevIndex;
+          this.index = nextIndex;
+
+          if (
+          prev && !uikitUtil.trigger(prev, 'beforeitemhide', [this]) ||
+          !uikitUtil.trigger(next, 'beforeitemshow', [this, prev]))
+          {
+            this.index = this.prevIndex;
+            reset();
+            return;
+          }
+
+          const promise = this._show(prev, next, force).then(() => {
+            prev && uikitUtil.trigger(prev, 'itemhidden', [this]);
+            uikitUtil.trigger(next, 'itemshown', [this]);
+
+            return new Promise((resolve) => {
+              uikitUtil.fastdom.write(() => {
+                stack.shift();
+                if (stack.length) {
+                  this.show(stack.shift(), true);
+                } else {
+                  this._transitioner = null;
+                }
+                resolve();
+              });
+            });
+          });
+
+          prev && uikitUtil.trigger(prev, 'itemhide', [this]);
+          uikitUtil.trigger(next, 'itemshow', [this]);
+
+          return promise;
+        },
+
+        getIndex(index, prev) {if (index === void 0) {index = this.index;}if (prev === void 0) {prev = this.index;}
+          return uikitUtil.clamp(uikitUtil.getIndex(index, this.slides, prev, this.finite), 0, this.maxIndex);
+        },
+
+        getValidIndex(index, prevIndex) {if (index === void 0) {index = this.index;}if (prevIndex === void 0) {prevIndex = this.prevIndex;}
+          return this.getIndex(index, prevIndex);
+        },
+
+        _show(prev, next, force) {
+          this._transitioner = this._getTransitioner(prev, next, this.dir, {
+            easing: force ?
+            next.offsetWidth < 600 ?
+            'cubic-bezier(0.25, 0.46, 0.45, 0.94)' /* easeOutQuad */ :
+            'cubic-bezier(0.165, 0.84, 0.44, 1)' /* easeOutQuart */ :
+            this.easing,
+            ...this.transitionOptions });
+
+
+          if (!force && !prev) {
+            this._translate(1);
+            return Promise.resolve();
+          }
+
+          const { length } = this.stack;
+          return this._transitioner[length > 1 ? 'forward' : 'show'](
+          length > 1 ? Math.min(this.duration, 75 + 75 / (length - 1)) : this.duration,
+          this.percent);
+
+        },
+
+        _getDistance(prev, next) {
+          return this._getTransitioner(prev, prev !== next && next).getDistance();
+        },
+
+        _translate(percent, prev, next) {if (prev === void 0) {prev = this.prevIndex;}if (next === void 0) {next = this.index;}
+          const transitioner = this._getTransitioner(prev !== next ? prev : false, next);
+          transitioner.translate(percent);
+          return transitioner;
+        },
+
+        _getTransitioner(
+        prev,
+        next,
+        dir,
+        options)
+        {if (prev === void 0) {prev = this.prevIndex;}if (next === void 0) {next = this.index;}if (dir === void 0) {dir = this.dir || 1;}if (options === void 0) {options = this.transitionOptions;}
+          return new this.Transitioner(
+          uikitUtil.isNumber(prev) ? this.slides[prev] : prev,
+          uikitUtil.isNumber(next) ? this.slides[next] : next,
+          dir * (uikitUtil.isRtl ? -1 : 1),
+          options);
+
+        } } };
+
+
+
+    function getDirection(index, prevIndex) {
+      return index === 'next' ? 1 : index === 'previous' ? -1 : index < prevIndex ? -1 : 1;
+    }
+
+    function speedUp(x) {
+      return 0.5 * x + 300; // parabola through (400,500; 600,600; 1800,1200)
+    }
+
+    var Slideshow = {
+      mixins: [Slider],
+
+      props: {
+        animation: String },
+
+
+      data: {
+        animation: 'slide',
+        clsActivated: 'uk-transition-active',
+        Animations: Animations$1,
+        Transitioner },
+
+
+      computed: {
+        animation(_ref) {let { animation, Animations } = _ref;
+          return { ...(Animations[animation] || Animations.slide), name: animation };
+        },
+
+        transitionOptions() {
+          return { animation: this.animation };
+        } },
+
+
+      events: {
+        beforeitemshow(_ref2) {let { target } = _ref2;
+          uikitUtil.addClass(target, this.clsActive);
+        },
+
+        itemshown(_ref3) {let { target } = _ref3;
+          uikitUtil.addClass(target, this.clsActivated);
+        },
+
+        itemhidden(_ref4) {let { target } = _ref4;
+          uikitUtil.removeClass(target, this.clsActive, this.clsActivated);
+        } } };
+
+    var LightboxPanel = {
+      mixins: [Container, Modal, Togglable, Slideshow],
+
+      functional: true,
+
+      props: {
+        delayControls: Number,
+        preload: Number,
+        videoAutoplay: Boolean,
+        template: String },
+
+
+      data: () => ({
+        preload: 1,
+        videoAutoplay: false,
+        delayControls: 3000,
+        items: [],
+        cls: 'uk-open',
+        clsPage: 'uk-lightbox-page',
+        selList: '.uk-lightbox-items',
+        attrItem: 'uk-lightbox-item',
+        selClose: '.uk-close-large',
+        selCaption: '.uk-lightbox-caption',
+        pauseOnHover: false,
+        velocity: 2,
+        Animations,
+        template: "<div class=\"uk-lightbox uk-overflow-hidden\"> <ul class=\"uk-lightbox-items\"></ul> <div class=\"uk-lightbox-toolbar uk-position-top uk-text-right uk-transition-slide-top uk-transition-opaque\"> <button class=\"uk-lightbox-toolbar-icon uk-close-large\" type=\"button\" uk-close></button> </div> <a class=\"uk-lightbox-button uk-position-center-left uk-position-medium uk-transition-fade\" href uk-slidenav-previous uk-lightbox-item=\"previous\"></a> <a class=\"uk-lightbox-button uk-position-center-right uk-position-medium uk-transition-fade\" href uk-slidenav-next uk-lightbox-item=\"next\"></a> <div class=\"uk-lightbox-toolbar uk-lightbox-caption uk-position-bottom uk-text-center uk-transition-slide-bottom uk-transition-opaque\"></div> </div>" }),
+
+
+
+
+
+
+
+
+
+
+      created() {
+        const $el = uikitUtil.$(this.template);
+        const list = uikitUtil.$(this.selList, $el);
+        this.items.forEach(() => uikitUtil.append(list, '<li>'));
+
+        this.$mount(uikitUtil.append(this.container, $el));
+      },
+
+      computed: {
+        caption(_ref, $el) {let { selCaption } = _ref;
+          return uikitUtil.$(selCaption, $el);
+        } },
+
+
+      events: [
+      {
+        name: uikitUtil.pointerMove + " " + uikitUtil.pointerDown + " keydown",
+
+        handler: 'showControls' },
+
+
+      {
+        name: 'click',
+
+        self: true,
+
+        delegate() {
+          return this.selSlides;
+        },
+
+        handler(e) {
+          if (e.defaultPrevented) {
+            return;
+          }
+
+          this.hide();
+        } },
+
+
+      {
+        name: 'shown',
+
+        self: true,
+
+        handler() {
+          this.showControls();
+        } },
+
+
+      {
+        name: 'hide',
+
+        self: true,
+
+        handler() {
+          this.hideControls();
+
+          uikitUtil.removeClass(this.slides, this.clsActive);
+          uikitUtil.Transition.stop(this.slides);
+        } },
+
+
+      {
+        name: 'hidden',
+
+        self: true,
+
+        handler() {
+          this.$destroy(true);
+        } },
+
+
+      {
+        name: 'keyup',
+
+        el() {
+          return document;
+        },
+
+        handler(e) {
+          if (!this.isToggled(this.$el) || !this.draggable) {
+            return;
+          }
+
+          switch (e.keyCode) {
+            case 37:
+              this.show('previous');
+              break;
+            case 39:
+              this.show('next');
+              break;}
+
+        } },
+
+
+      {
+        name: 'beforeitemshow',
+
+        handler(e) {
+          if (this.isToggled()) {
+            return;
+          }
+
+          this.draggable = false;
+
+          e.preventDefault();
+
+          this.toggleElement(this.$el, true, false);
+
+          this.animation = Animations['scale'];
+          uikitUtil.removeClass(e.target, this.clsActive);
+          this.stack.splice(1, 0, this.index);
+        } },
+
+
+      {
+        name: 'itemshow',
+
+        handler() {
+          uikitUtil.html(this.caption, this.getItem().caption || '');
+
+          for (let j = -this.preload; j <= this.preload; j++) {
+            this.loadItem(this.index + j);
+          }
+        } },
+
+
+      {
+        name: 'itemshown',
+
+        handler() {
+          this.draggable = this.$props.draggable;
+        } },
+
+
+      {
+        name: 'itemload',
+
+        async handler(_, item) {
+          const { source: src, type, alt = '', poster, attrs = {} } = item;
+
+          this.setItem(item, '<span uk-spinner></span>');
+
+          if (!src) {
+            return;
+          }
+
+          let matches;
+          const iframeAttrs = {
+            frameborder: '0',
+            allow: 'autoplay',
+            allowfullscreen: '',
+            style: 'max-width: 100%; box-sizing: border-box;',
+            'uk-responsive': '',
+            'uk-video': "" + this.videoAutoplay };
+
+
+          // Image
+          if (
+          type === 'image' ||
+          src.match(/\.(avif|jpe?g|jfif|a?png|gif|svg|webp)($|\?)/i))
+          {
+            try {
+              const { width, height } = await uikitUtil.getImage(src, attrs.srcset, attrs.size);
+              this.setItem(item, createEl('img', { src, width, height, alt, ...attrs }));
+            } catch (e) {
+              this.setError(item);
+            }
+
+            // Video
+          } else if (type === 'video' || src.match(/\.(mp4|webm|ogv)($|\?)/i)) {
+            const video = createEl('video', {
+              src,
+              poster,
+              controls: '',
+              playsinline: '',
+              'uk-video': "" + this.videoAutoplay,
+              ...attrs });
+
+
+            uikitUtil.on(video, 'loadedmetadata', () => {
+              uikitUtil.attr(video, { width: video.videoWidth, height: video.videoHeight });
+              this.setItem(item, video);
+            });
+            uikitUtil.on(video, 'error', () => this.setError(item));
+
+            // Iframe
+          } else if (type === 'iframe' || src.match(/\.(html|php)($|\?)/i)) {
+            this.setItem(
+            item,
+            createEl('iframe', {
+              src,
+              frameborder: '0',
+              allowfullscreen: '',
+              class: 'uk-lightbox-iframe',
+              ...attrs }));
+
+
+
+            // YouTube
+          } else if (
+          matches = src.match(
+          /\/\/(?:.*?youtube(-nocookie)?\..*?[?&]v=|youtu\.be\/)([\w-]{11})[&?]?(.*)?/))
+
+          {
+            this.setItem(
+            item,
+            createEl('iframe', {
+              src: "https://www.youtube" + (matches[1] || '') + ".com/embed/" + matches[2] + (
+              matches[3] ? "?" + matches[3] : ''),
+
+              width: 1920,
+              height: 1080,
+              ...iframeAttrs,
+              ...attrs }));
+
+
+
+            // Vimeo
+          } else if (matches = src.match(/\/\/.*?vimeo\.[a-z]+\/(\d+)[&?]?(.*)?/)) {
+            try {
+              const { height, width } = await (
+              await fetch("https://vimeo.com/api/oembed.json?maxwidth=1920&url=" +
+              encodeURI(
+              src),
+
+              {
+                credentials: 'omit' })).
+
+
+              json();
+
+              this.setItem(
+              item,
+              createEl('iframe', {
+                src: "https://player.vimeo.com/video/" + matches[1] + (
+                matches[2] ? "?" + matches[2] : ''),
+
+                width,
+                height,
+                ...iframeAttrs,
+                ...attrs }));
+
+
+            } catch (e) {
+              this.setError(item);
+            }
+          }
+        } }],
+
+
+
+      methods: {
+        loadItem(index) {if (index === void 0) {index = this.index;}
+          const item = this.getItem(index);
+
+          if (!this.getSlide(item).childElementCount) {
+            uikitUtil.trigger(this.$el, 'itemload', [item]);
+          }
+        },
+
+        getItem(index) {if (index === void 0) {index = this.index;}
+          return this.items[uikitUtil.getIndex(index, this.slides)];
+        },
+
+        setItem(item, content) {
+          uikitUtil.trigger(this.$el, 'itemloaded', [this, uikitUtil.html(this.getSlide(item), content)]);
+        },
+
+        getSlide(item) {
+          return this.slides[this.items.indexOf(item)];
+        },
+
+        setError(item) {
+          this.setItem(item, '<span uk-icon="icon: bolt; ratio: 2"></span>');
+        },
+
+        showControls() {
+          clearTimeout(this.controlsTimer);
+          this.controlsTimer = setTimeout(this.hideControls, this.delayControls);
+
+          uikitUtil.addClass(this.$el, 'uk-active', 'uk-transition-active');
+        },
+
+        hideControls() {
+          uikitUtil.removeClass(this.$el, 'uk-active', 'uk-transition-active');
+        } } };
+
+
+
+    function createEl(tag, attrs) {
+      const el = uikitUtil.fragment("<" + tag + ">");
+      uikitUtil.attr(el, attrs);
+      return el;
+    }
+
+    var Component = {
+      install,
+
+      props: { toggle: String },
+
+      data: { toggle: 'a' },
+
+      computed: {
+        toggles: {
+          get(_ref, $el) {let { toggle } = _ref;
+            return uikitUtil.$$(toggle, $el);
+          },
+
+          watch() {
+            this.hide();
+          } } },
+
+
+
+      disconnected() {
+        this.hide();
+      },
+
+      events: [
+      {
+        name: 'click',
+
+        delegate() {
+          return this.toggle + ":not(.uk-disabled)";
+        },
+
+        handler(e) {
+          e.preventDefault();
+          this.show(e.current);
+        } }],
+
+
+
+      methods: {
+        show(index) {
+          const items = uikitUtil.uniqueBy(this.toggles.map(toItem), 'source');
+
+          if (uikitUtil.isElement(index)) {
+            const { source } = toItem(index);
+            index = uikitUtil.findIndex(items, (_ref2) => {let { source: src } = _ref2;return source === src;});
+          }
+
+          this.panel = this.panel || this.$create('lightboxPanel', { ...this.$props, items });
+
+          uikitUtil.on(this.panel.$el, 'hidden', () => this.panel = false);
+
+          return this.panel.show(index);
+        },
+
+        hide() {var _this$panel;
+          return (_this$panel = this.panel) == null ? void 0 : _this$panel.hide();
+        } } };
+
+
+
+    function install(UIkit, Lightbox) {
+      if (!UIkit.lightboxPanel) {
+        UIkit.component('lightboxPanel', LightboxPanel);
+      }
+
+      uikitUtil.assign(Lightbox.props, UIkit.component('lightboxPanel').options.props);
+    }
+
+    function toItem(el) {
+      const item = {};
+
+      for (const attr of ['href', 'caption', 'type', 'poster', 'alt', 'attrs']) {
+        item[attr === 'href' ? 'source' : attr] = uikitUtil.data(el, attr);
+      }
+
+      item.attrs = uikitUtil.parseOptions(item.attrs);
+
+      return item;
+    }
+
+    if (typeof window !== 'undefined' && window.UIkit) {
+      window.UIkit.component('lightbox', Component);
+    }
+
+    return Component;
+
+}));
 
 
 /***/ }),
@@ -7548,6 +9185,2833 @@ __webpack_require__.r(__webpack_exports__);
     return UIkit;
 
 }));
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/ajax.js":
+/*!************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/ajax.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ajax": () => (/* binding */ ajax),
+/* harmony export */   "getImage": () => (/* binding */ getImage)
+/* harmony export */ });
+/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./event */ "./node_modules/uikit/src/js/util/event.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+function ajax(url, options) {
+    const env = {
+        data: null,
+        method: 'GET',
+        headers: {},
+        xhr: new XMLHttpRequest(),
+        beforeSend: _lang__WEBPACK_IMPORTED_MODULE_0__.noop,
+        responseType: '',
+        ...options,
+    };
+    return Promise.resolve()
+        .then(() => env.beforeSend(env))
+        .then(() => send(url, env));
+}
+
+function send(url, env) {
+    return new Promise((resolve, reject) => {
+        const { xhr } = env;
+
+        for (const prop in env) {
+            if (prop in xhr) {
+                try {
+                    xhr[prop] = env[prop];
+                } catch (e) {
+                    // noop
+                }
+            }
+        }
+
+        xhr.open(env.method.toUpperCase(), url);
+
+        for (const header in env.headers) {
+            xhr.setRequestHeader(header, env.headers[header]);
+        }
+
+        (0,_event__WEBPACK_IMPORTED_MODULE_1__.on)(xhr, 'load', () => {
+            if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
+                resolve(xhr);
+            } else {
+                reject(
+                    (0,_lang__WEBPACK_IMPORTED_MODULE_0__.assign)(Error(xhr.statusText), {
+                        xhr,
+                        status: xhr.status,
+                    })
+                );
+            }
+        });
+
+        (0,_event__WEBPACK_IMPORTED_MODULE_1__.on)(xhr, 'error', () => reject((0,_lang__WEBPACK_IMPORTED_MODULE_0__.assign)(Error('Network Error'), { xhr })));
+        (0,_event__WEBPACK_IMPORTED_MODULE_1__.on)(xhr, 'timeout', () => reject((0,_lang__WEBPACK_IMPORTED_MODULE_0__.assign)(Error('Network Timeout'), { xhr })));
+
+        xhr.send(env.data);
+    });
+}
+
+function getImage(src, srcset, sizes) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+
+        img.onerror = (e) => {
+            reject(e);
+        };
+        img.onload = () => {
+            resolve(img);
+        };
+
+        sizes && (img.sizes = sizes);
+        srcset && (img.srcset = srcset);
+        img.src = src;
+    });
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/animation.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/animation.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Animation": () => (/* binding */ Animation),
+/* harmony export */   "Transition": () => (/* binding */ Transition),
+/* harmony export */   "animate": () => (/* binding */ animate),
+/* harmony export */   "transition": () => (/* binding */ transition)
+/* harmony export */ });
+/* harmony import */ var _attr__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./attr */ "./node_modules/uikit/src/js/util/attr.js");
+/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./event */ "./node_modules/uikit/src/js/util/event.js");
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style */ "./node_modules/uikit/src/js/util/style.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+/* harmony import */ var _class__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./class */ "./node_modules/uikit/src/js/util/class.js");
+
+
+
+
+
+
+function transition(element, props, duration = 400, timing = 'linear') {
+    return Promise.all(
+        (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).map(
+            (element) =>
+                new Promise((resolve, reject) => {
+                    for (const name in props) {
+                        const value = (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, name);
+                        if (value === '') {
+                            (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, name, value);
+                        }
+                    }
+
+                    const timer = setTimeout(() => (0,_event__WEBPACK_IMPORTED_MODULE_2__.trigger)(element, 'transitionend'), duration);
+
+                    (0,_event__WEBPACK_IMPORTED_MODULE_2__.once)(
+                        element,
+                        'transitionend transitioncanceled',
+                        ({ type }) => {
+                            clearTimeout(timer);
+                            (0,_class__WEBPACK_IMPORTED_MODULE_3__.removeClass)(element, 'uk-transition');
+                            (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, {
+                                transitionProperty: '',
+                                transitionDuration: '',
+                                transitionTimingFunction: '',
+                            });
+                            type === 'transitioncanceled' ? reject() : resolve(element);
+                        },
+                        { self: true }
+                    );
+
+                    (0,_class__WEBPACK_IMPORTED_MODULE_3__.addClass)(element, 'uk-transition');
+                    (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, {
+                        transitionProperty: Object.keys(props).map(_style__WEBPACK_IMPORTED_MODULE_1__.propName).join(','),
+                        transitionDuration: `${duration}ms`,
+                        transitionTimingFunction: timing,
+                        ...props,
+                    });
+                })
+        )
+    );
+}
+
+const Transition = {
+    start: transition,
+
+    stop(element) {
+        (0,_event__WEBPACK_IMPORTED_MODULE_2__.trigger)(element, 'transitionend');
+        return Promise.resolve();
+    },
+
+    cancel(element) {
+        (0,_event__WEBPACK_IMPORTED_MODULE_2__.trigger)(element, 'transitioncanceled');
+    },
+
+    inProgress(element) {
+        return (0,_class__WEBPACK_IMPORTED_MODULE_3__.hasClass)(element, 'uk-transition');
+    },
+};
+
+const animationPrefix = 'uk-animation-';
+
+function animate(element, animation, duration = 200, origin, out) {
+    return Promise.all(
+        (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).map(
+            (element) =>
+                new Promise((resolve, reject) => {
+                    (0,_event__WEBPACK_IMPORTED_MODULE_2__.trigger)(element, 'animationcanceled');
+                    const timer = setTimeout(() => (0,_event__WEBPACK_IMPORTED_MODULE_2__.trigger)(element, 'animationend'), duration);
+
+                    (0,_event__WEBPACK_IMPORTED_MODULE_2__.once)(
+                        element,
+                        'animationend animationcanceled',
+                        ({ type }) => {
+                            clearTimeout(timer);
+
+                            type === 'animationcanceled' ? reject() : resolve(element);
+
+                            (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, 'animationDuration', '');
+                            (0,_class__WEBPACK_IMPORTED_MODULE_3__.removeClasses)(element, `${animationPrefix}\\S*`);
+                        },
+                        { self: true }
+                    );
+
+                    (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, 'animationDuration', `${duration}ms`);
+                    (0,_class__WEBPACK_IMPORTED_MODULE_3__.addClass)(element, animation, animationPrefix + (out ? 'leave' : 'enter'));
+
+                    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.startsWith)(animation, animationPrefix)) {
+                        origin && (0,_class__WEBPACK_IMPORTED_MODULE_3__.addClass)(element, `uk-transform-origin-${origin}`);
+                        out && (0,_class__WEBPACK_IMPORTED_MODULE_3__.addClass)(element, `${animationPrefix}reverse`);
+                    }
+                })
+        )
+    );
+}
+
+const inProgress = new RegExp(`${animationPrefix}(enter|leave)`);
+const Animation = {
+    in: animate,
+
+    out(element, animation, duration, origin) {
+        return animate(element, animation, duration, origin, true);
+    },
+
+    inProgress(element) {
+        return inProgress.test((0,_attr__WEBPACK_IMPORTED_MODULE_4__.attr)(element, 'class'));
+    },
+
+    cancel(element) {
+        (0,_event__WEBPACK_IMPORTED_MODULE_2__.trigger)(element, 'animationcanceled');
+    },
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/attr.js":
+/*!************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/attr.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "attr": () => (/* binding */ attr),
+/* harmony export */   "data": () => (/* binding */ data),
+/* harmony export */   "hasAttr": () => (/* binding */ hasAttr),
+/* harmony export */   "removeAttr": () => (/* binding */ removeAttr)
+/* harmony export */ });
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+function attr(element, name, value) {
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isObject)(name)) {
+        for (const key in name) {
+            attr(element, key, name[key]);
+        }
+        return;
+    }
+
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(value)) {
+        return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element)?.getAttribute(name);
+    } else {
+        for (const el of (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element)) {
+            if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isFunction)(value)) {
+                value = value.call(el, attr(el, name));
+            }
+
+            if (value === null) {
+                removeAttr(el, name);
+            } else {
+                el.setAttribute(name, value);
+            }
+        }
+    }
+}
+
+function hasAttr(element, name) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).some((element) => element.hasAttribute(name));
+}
+
+function removeAttr(element, name) {
+    const elements = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element);
+    for (const attribute of name.split(' ')) {
+        for (const element of elements) {
+            element.removeAttribute(attribute);
+        }
+    }
+}
+
+function data(element, attribute) {
+    for (const name of [attribute, `data-${attribute}`]) {
+        if (hasAttr(element, name)) {
+            return attr(element, name);
+        }
+    }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/class.js":
+/*!*************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/class.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "addClass": () => (/* binding */ addClass),
+/* harmony export */   "hasClass": () => (/* binding */ hasClass),
+/* harmony export */   "removeClass": () => (/* binding */ removeClass),
+/* harmony export */   "removeClasses": () => (/* binding */ removeClasses),
+/* harmony export */   "replaceClass": () => (/* binding */ replaceClass),
+/* harmony export */   "toggleClass": () => (/* binding */ toggleClass)
+/* harmony export */ });
+/* harmony import */ var _attr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./attr */ "./node_modules/uikit/src/js/util/attr.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+function addClass(element, ...args) {
+    apply(element, args, 'add');
+}
+
+function removeClass(element, ...args) {
+    apply(element, args, 'remove');
+}
+
+function removeClasses(element, cls) {
+    (0,_attr__WEBPACK_IMPORTED_MODULE_0__.attr)(element, 'class', (value) => (value || '').replace(new RegExp(`\\b${cls}\\b`, 'g'), ''));
+}
+
+function replaceClass(element, ...args) {
+    args[0] && removeClass(element, args[0]);
+    args[1] && addClass(element, args[1]);
+}
+
+function hasClass(element, cls) {
+    [cls] = getClasses(cls);
+    return !!cls && (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(element).some((node) => node.classList.contains(cls));
+}
+
+function toggleClass(element, cls, force) {
+    const classes = getClasses(cls);
+
+    if (!(0,_lang__WEBPACK_IMPORTED_MODULE_1__.isUndefined)(force)) {
+        force = !!force;
+    }
+
+    for (const node of (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(element)) {
+        for (const cls of classes) {
+            node.classList.toggle(cls, force);
+        }
+    }
+}
+
+function apply(element, args, fn) {
+    args = args.reduce((args, arg) => args.concat(getClasses(arg)), []);
+
+    for (const node of (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(element)) {
+        node.classList[fn](...args);
+    }
+}
+
+function getClasses(str) {
+    return String(str).split(/\s|,/).filter(Boolean);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/dimensions.js":
+/*!******************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/dimensions.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "boxModelAdjust": () => (/* binding */ boxModelAdjust),
+/* harmony export */   "dimensions": () => (/* binding */ dimensions),
+/* harmony export */   "flipPosition": () => (/* binding */ flipPosition),
+/* harmony export */   "height": () => (/* binding */ height),
+/* harmony export */   "offset": () => (/* binding */ offset),
+/* harmony export */   "offsetPosition": () => (/* binding */ offsetPosition),
+/* harmony export */   "position": () => (/* binding */ position),
+/* harmony export */   "toPx": () => (/* binding */ toPx),
+/* harmony export */   "width": () => (/* binding */ width)
+/* harmony export */ });
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style */ "./node_modules/uikit/src/js/util/style.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+const dirs = {
+    width: ['left', 'right'],
+    height: ['top', 'bottom'],
+};
+
+function dimensions(element) {
+    const rect = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isElement)(element)
+        ? (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element).getBoundingClientRect()
+        : { height: height(element), width: width(element), top: 0, left: 0 };
+
+    return {
+        height: rect.height,
+        width: rect.width,
+        top: rect.top,
+        left: rect.left,
+        bottom: rect.top + rect.height,
+        right: rect.left + rect.width,
+    };
+}
+
+function offset(element, coordinates) {
+    const currentOffset = dimensions(element);
+
+    if (element) {
+        const { scrollY, scrollX } = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toWindow)(element);
+        const offsetBy = { height: scrollY, width: scrollX };
+
+        for (const dir in dirs) {
+            for (const prop of dirs[dir]) {
+                currentOffset[prop] += offsetBy[dir];
+            }
+        }
+    }
+
+    if (!coordinates) {
+        return currentOffset;
+    }
+
+    const pos = (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, 'position');
+
+    (0,_lang__WEBPACK_IMPORTED_MODULE_0__.each)((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, ['left', 'top']), (value, prop) =>
+        (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(
+            element,
+            prop,
+            coordinates[prop] -
+                currentOffset[prop] +
+                (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)(pos === 'absolute' && value === 'auto' ? position(element)[prop] : value)
+        )
+    );
+}
+
+function position(element) {
+    let { top, left } = offset(element);
+
+    const {
+        ownerDocument: { body, documentElement },
+        offsetParent,
+    } = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element);
+    let parent = offsetParent || documentElement;
+
+    while (
+        parent &&
+        (parent === body || parent === documentElement) &&
+        (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(parent, 'position') === 'static'
+    ) {
+        parent = parent.parentNode;
+    }
+
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isElement)(parent)) {
+        const parentOffset = offset(parent);
+        top -= parentOffset.top + (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(parent, 'borderTopWidth'));
+        left -= parentOffset.left + (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(parent, 'borderLeftWidth'));
+    }
+
+    return {
+        top: top - (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, 'marginTop')),
+        left: left - (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, 'marginLeft')),
+    };
+}
+
+function offsetPosition(element) {
+    const offset = [0, 0];
+
+    element = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element);
+
+    do {
+        offset[0] += element.offsetTop;
+        offset[1] += element.offsetLeft;
+
+        if ((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, 'position') === 'fixed') {
+            const win = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toWindow)(element);
+            offset[0] += win.scrollY;
+            offset[1] += win.scrollX;
+            return offset;
+        }
+    } while ((element = element.offsetParent));
+
+    return offset;
+}
+
+const height = dimension('height');
+const width = dimension('width');
+
+function dimension(prop) {
+    const propName = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.ucfirst)(prop);
+    return (element, value) => {
+        if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(value)) {
+            if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isWindow)(element)) {
+                return element[`inner${propName}`];
+            }
+
+            if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isDocument)(element)) {
+                const doc = element.documentElement;
+                return Math.max(doc[`offset${propName}`], doc[`scroll${propName}`]);
+            }
+
+            element = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element);
+
+            value = (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, prop);
+            value = value === 'auto' ? element[`offset${propName}`] : (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)(value) || 0;
+
+            return value - boxModelAdjust(element, prop);
+        } else {
+            return (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(
+                element,
+                prop,
+                !value && value !== 0 ? '' : +value + boxModelAdjust(element, prop) + 'px'
+            );
+        }
+    };
+}
+
+function boxModelAdjust(element, prop, sizing = 'border-box') {
+    return (0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, 'boxSizing') === sizing
+        ? dirs[prop]
+              .map(_lang__WEBPACK_IMPORTED_MODULE_0__.ucfirst)
+              .reduce(
+                  (value, prop) =>
+                      value +
+                      (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, `padding${prop}`)) +
+                      (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)((0,_style__WEBPACK_IMPORTED_MODULE_1__.css)(element, `border${prop}Width`)),
+                  0
+              )
+        : 0;
+}
+
+function flipPosition(pos) {
+    for (const dir in dirs) {
+        for (const i in dirs[dir]) {
+            if (dirs[dir][i] === pos) {
+                return dirs[dir][1 - i];
+            }
+        }
+    }
+    return pos;
+}
+
+function toPx(value, property = 'width', element = window, offsetDim = false) {
+    if (!(0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(value)) {
+        return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)(value);
+    }
+
+    return parseCalc(value).reduce((result, value) => {
+        const unit = parseUnit(value);
+        if (unit) {
+            value = percent(
+                unit === 'vh'
+                    ? height((0,_lang__WEBPACK_IMPORTED_MODULE_0__.toWindow)(element))
+                    : unit === 'vw'
+                    ? width((0,_lang__WEBPACK_IMPORTED_MODULE_0__.toWindow)(element))
+                    : offsetDim
+                    ? element[`offset${(0,_lang__WEBPACK_IMPORTED_MODULE_0__.ucfirst)(property)}`]
+                    : dimensions(element)[property],
+                value
+            );
+        }
+
+        return result + (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)(value);
+    }, 0);
+}
+
+const calcRe = /-?\d+(?:\.\d+)?(?:v[wh]|%|px)?/g;
+const parseCalc = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.memoize)((calc) => calc.toString().replace(/\s/g, '').match(calcRe) || []);
+const unitRe = /(?:v[hw]|%)$/;
+const parseUnit = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.memoize)((str) => (str.match(unitRe) || [])[0]);
+
+function percent(base, value) {
+    return (base * (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toFloat)(value)) / 100;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/dom.js":
+/*!***********************************************!*\
+  !*** ./node_modules/uikit/src/js/util/dom.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "$": () => (/* binding */ $),
+/* harmony export */   "$$": () => (/* binding */ $$),
+/* harmony export */   "after": () => (/* binding */ after),
+/* harmony export */   "append": () => (/* binding */ append),
+/* harmony export */   "apply": () => (/* binding */ apply),
+/* harmony export */   "before": () => (/* binding */ before),
+/* harmony export */   "empty": () => (/* binding */ empty),
+/* harmony export */   "fragment": () => (/* binding */ fragment),
+/* harmony export */   "html": () => (/* binding */ html),
+/* harmony export */   "isTag": () => (/* binding */ isTag),
+/* harmony export */   "prepend": () => (/* binding */ prepend),
+/* harmony export */   "ready": () => (/* binding */ ready),
+/* harmony export */   "remove": () => (/* binding */ remove),
+/* harmony export */   "unwrap": () => (/* binding */ unwrap),
+/* harmony export */   "wrapAll": () => (/* binding */ wrapAll),
+/* harmony export */   "wrapInner": () => (/* binding */ wrapInner)
+/* harmony export */ });
+/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event */ "./node_modules/uikit/src/js/util/event.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter */ "./node_modules/uikit/src/js/util/filter.js");
+/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./selector */ "./node_modules/uikit/src/js/util/selector.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+
+
+function ready(fn) {
+    if (document.readyState !== 'loading') {
+        fn();
+        return;
+    }
+
+    (0,_event__WEBPACK_IMPORTED_MODULE_0__.once)(document, 'DOMContentLoaded', fn);
+}
+
+function isTag(element, tagName) {
+    return element?.tagName?.toLowerCase() === tagName.toLowerCase();
+}
+
+function empty(element) {
+    element = $(element);
+    element.innerHTML = '';
+    return element;
+}
+
+function html(parent, html) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_1__.isUndefined)(html) ? $(parent).innerHTML : append(empty(parent), html);
+}
+
+const prepend = applyFn('prepend');
+const append = applyFn('append');
+const before = applyFn('before');
+const after = applyFn('after');
+
+function applyFn(fn) {
+    return function (ref, element) {
+        const nodes = (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)((0,_lang__WEBPACK_IMPORTED_MODULE_1__.isString)(element) ? fragment(element) : element);
+        $(ref)?.[fn](...nodes);
+        return unwrapSingle(nodes);
+    };
+}
+
+function remove(element) {
+    (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(element).forEach((element) => element.remove());
+}
+
+function wrapAll(element, structure) {
+    structure = (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNode)(before(element, structure));
+
+    while (structure.firstChild) {
+        structure = structure.firstChild;
+    }
+
+    append(structure, element);
+
+    return structure;
+}
+
+function wrapInner(element, structure) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(
+        (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(element).map((element) =>
+            element.hasChildNodes()
+                ? wrapAll((0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(element.childNodes), structure)
+                : append(element, structure)
+        )
+    );
+}
+
+function unwrap(element) {
+    (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(element)
+        .map(_filter__WEBPACK_IMPORTED_MODULE_2__.parent)
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .forEach((parent) => parent.replaceWith(...parent.childNodes));
+}
+
+const fragmentRe = /^\s*<(\w+|!)[^>]*>/;
+const singleTagRe = /^<(\w+)\s*\/?>(?:<\/\1>)?$/;
+
+function fragment(html) {
+    const matches = singleTagRe.exec(html);
+    if (matches) {
+        return document.createElement(matches[1]);
+    }
+
+    const container = document.createElement('div');
+    if (fragmentRe.test(html)) {
+        container.insertAdjacentHTML('beforeend', html.trim());
+    } else {
+        container.textContent = html;
+    }
+
+    return unwrapSingle(container.childNodes);
+}
+
+function unwrapSingle(nodes) {
+    return nodes.length > 1 ? nodes : nodes[0];
+}
+
+function apply(node, fn) {
+    if (!(0,_lang__WEBPACK_IMPORTED_MODULE_1__.isElement)(node)) {
+        return;
+    }
+
+    fn(node);
+    node = node.firstElementChild;
+    while (node) {
+        const next = node.nextElementSibling;
+        apply(node, fn);
+        node = next;
+    }
+}
+
+function $(selector, context) {
+    return isHtml(selector) ? (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNode)(fragment(selector)) : (0,_selector__WEBPACK_IMPORTED_MODULE_3__.find)(selector, context);
+}
+
+function $$(selector, context) {
+    return isHtml(selector) ? (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNodes)(fragment(selector)) : (0,_selector__WEBPACK_IMPORTED_MODULE_3__.findAll)(selector, context);
+}
+
+function isHtml(str) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_1__.isString)(str) && (0,_lang__WEBPACK_IMPORTED_MODULE_1__.startsWith)(str.trim(), '<');
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/env.js":
+/*!***********************************************!*\
+  !*** ./node_modules/uikit/src/js/util/env.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "hasTouch": () => (/* binding */ hasTouch),
+/* harmony export */   "inBrowser": () => (/* binding */ inBrowser),
+/* harmony export */   "isRtl": () => (/* binding */ isRtl),
+/* harmony export */   "pointerCancel": () => (/* binding */ pointerCancel),
+/* harmony export */   "pointerDown": () => (/* binding */ pointerDown),
+/* harmony export */   "pointerEnter": () => (/* binding */ pointerEnter),
+/* harmony export */   "pointerLeave": () => (/* binding */ pointerLeave),
+/* harmony export */   "pointerMove": () => (/* binding */ pointerMove),
+/* harmony export */   "pointerUp": () => (/* binding */ pointerUp)
+/* harmony export */ });
+/* harmony import */ var _attr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./attr */ "./node_modules/uikit/src/js/util/attr.js");
+
+
+const inBrowser = typeof window !== 'undefined';
+const isRtl = inBrowser && (0,_attr__WEBPACK_IMPORTED_MODULE_0__.attr)(document.documentElement, 'dir') === 'rtl';
+
+const hasTouch = inBrowser && 'ontouchstart' in window;
+const hasPointerEvents = inBrowser && window.PointerEvent;
+
+const pointerDown = hasPointerEvents ? 'pointerdown' : hasTouch ? 'touchstart' : 'mousedown';
+const pointerMove = hasPointerEvents ? 'pointermove' : hasTouch ? 'touchmove' : 'mousemove';
+const pointerUp = hasPointerEvents ? 'pointerup' : hasTouch ? 'touchend' : 'mouseup';
+const pointerEnter = hasPointerEvents ? 'pointerenter' : hasTouch ? '' : 'mouseenter';
+const pointerLeave = hasPointerEvents ? 'pointerleave' : hasTouch ? '' : 'mouseleave';
+const pointerCancel = hasPointerEvents ? 'pointercancel' : 'touchcancel';
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/event.js":
+/*!*************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/event.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createEvent": () => (/* binding */ createEvent),
+/* harmony export */   "getEventPos": () => (/* binding */ getEventPos),
+/* harmony export */   "isTouch": () => (/* binding */ isTouch),
+/* harmony export */   "off": () => (/* binding */ off),
+/* harmony export */   "on": () => (/* binding */ on),
+/* harmony export */   "once": () => (/* binding */ once),
+/* harmony export */   "toEventTargets": () => (/* binding */ toEventTargets),
+/* harmony export */   "trigger": () => (/* binding */ trigger)
+/* harmony export */ });
+/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./selector */ "./node_modules/uikit/src/js/util/selector.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./filter */ "./node_modules/uikit/src/js/util/filter.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+
+function on(...args) {
+    let [targets, types, selector, listener, useCapture = false] = getArgs(args);
+
+    if (listener.length > 1) {
+        listener = detail(listener);
+    }
+
+    if (useCapture?.self) {
+        listener = selfFilter(listener);
+    }
+
+    if (selector) {
+        listener = delegate(selector, listener);
+    }
+
+    for (const type of types) {
+        for (const target of targets) {
+            target.addEventListener(type, listener, useCapture);
+        }
+    }
+
+    return () => off(targets, types, listener, useCapture);
+}
+
+function off(...args) {
+    let [targets, types, , listener, useCapture = false] = getArgs(args);
+    for (const type of types) {
+        for (const target of targets) {
+            target.removeEventListener(type, listener, useCapture);
+        }
+    }
+}
+
+function once(...args) {
+    const [element, types, selector, listener, useCapture = false, condition] = getArgs(args);
+    const off = on(
+        element,
+        types,
+        selector,
+        (e) => {
+            const result = !condition || condition(e);
+            if (result) {
+                off();
+                listener(e, result);
+            }
+        },
+        useCapture
+    );
+
+    return off;
+}
+
+function trigger(targets, event, detail) {
+    return toEventTargets(targets).every((target) =>
+        target.dispatchEvent(createEvent(event, true, true, detail))
+    );
+}
+
+function createEvent(e, bubbles = true, cancelable = false, detail) {
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(e)) {
+        e = new CustomEvent(e, { bubbles, cancelable, detail });
+    }
+
+    return e;
+}
+
+function getArgs(args) {
+    // Event targets
+    args[0] = toEventTargets(args[0]);
+
+    // Event types
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(args[1])) {
+        args[1] = args[1].split(' ');
+    }
+
+    // Delegate?
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isFunction)(args[2])) {
+        args.splice(2, 0, false);
+    }
+
+    return args;
+}
+
+function delegate(selector, listener) {
+    return (e) => {
+        const current =
+            selector[0] === '>'
+                ? (0,_selector__WEBPACK_IMPORTED_MODULE_1__.findAll)(selector, e.currentTarget)
+                      .reverse()
+                      .filter((element) => (0,_filter__WEBPACK_IMPORTED_MODULE_2__.within)(e.target, element))[0]
+                : (0,_filter__WEBPACK_IMPORTED_MODULE_2__.closest)(e.target, selector);
+
+        if (current) {
+            e.current = current;
+            listener.call(this, e);
+        }
+    };
+}
+
+function detail(listener) {
+    return (e) => ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isArray)(e.detail) ? listener(e, ...e.detail) : listener(e));
+}
+
+function selfFilter(listener) {
+    return function (e) {
+        if (e.target === e.currentTarget || e.target === e.current) {
+            return listener.call(null, e);
+        }
+    };
+}
+
+function isEventTarget(target) {
+    return target && 'addEventListener' in target;
+}
+
+function toEventTarget(target) {
+    return isEventTarget(target) ? target : (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(target);
+}
+
+function toEventTargets(target) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isArray)(target)
+        ? target.map(toEventTarget).filter(Boolean)
+        : (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(target)
+        ? (0,_selector__WEBPACK_IMPORTED_MODULE_1__.findAll)(target)
+        : isEventTarget(target)
+        ? [target]
+        : (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(target);
+}
+
+function isTouch(e) {
+    return e.pointerType === 'touch' || !!e.touches;
+}
+
+function getEventPos(e) {
+    const { clientX: x, clientY: y } = e.touches?.[0] || e.changedTouches?.[0] || e;
+
+    return { x, y };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/fastdom.js":
+/*!***************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/fastdom.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "fastdom": () => (/* binding */ fastdom)
+/* harmony export */ });
+/*
+    Based on:
+    Copyright (c) 2016 Wilson Page wilsonpage@me.com
+    https://github.com/wilsonpage/fastdom
+*/
+
+const fastdom = {
+    reads: [],
+    writes: [],
+
+    read(task) {
+        this.reads.push(task);
+        scheduleFlush();
+        return task;
+    },
+
+    write(task) {
+        this.writes.push(task);
+        scheduleFlush();
+        return task;
+    },
+
+    clear(task) {
+        remove(this.reads, task);
+        remove(this.writes, task);
+    },
+
+    flush,
+};
+
+function flush(recursion) {
+    runTasks(fastdom.reads);
+    runTasks(fastdom.writes.splice(0));
+
+    fastdom.scheduled = false;
+
+    if (fastdom.reads.length || fastdom.writes.length) {
+        scheduleFlush(recursion + 1);
+    }
+}
+
+const RECURSION_LIMIT = 4;
+function scheduleFlush(recursion) {
+    if (fastdom.scheduled) {
+        return;
+    }
+
+    fastdom.scheduled = true;
+    if (recursion && recursion < RECURSION_LIMIT) {
+        Promise.resolve().then(() => flush(recursion));
+    } else {
+        requestAnimationFrame(() => flush(1));
+    }
+}
+
+function runTasks(tasks) {
+    let task;
+    while ((task = tasks.shift())) {
+        try {
+            task();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+}
+
+function remove(array, item) {
+    const index = array.indexOf(item);
+    return ~index && array.splice(index, 1);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/filter.js":
+/*!**************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/filter.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "children": () => (/* binding */ children),
+/* harmony export */   "closest": () => (/* binding */ closest),
+/* harmony export */   "filter": () => (/* binding */ filter),
+/* harmony export */   "index": () => (/* binding */ index),
+/* harmony export */   "isFocusable": () => (/* binding */ isFocusable),
+/* harmony export */   "isInput": () => (/* binding */ isInput),
+/* harmony export */   "isVisible": () => (/* binding */ isVisible),
+/* harmony export */   "isVoidElement": () => (/* binding */ isVoidElement),
+/* harmony export */   "matches": () => (/* binding */ matches),
+/* harmony export */   "parent": () => (/* binding */ parent),
+/* harmony export */   "parents": () => (/* binding */ parents),
+/* harmony export */   "selFocusable": () => (/* binding */ selFocusable),
+/* harmony export */   "selInput": () => (/* binding */ selInput),
+/* harmony export */   "within": () => (/* binding */ within)
+/* harmony export */ });
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+const voidElements = {
+    area: true,
+    base: true,
+    br: true,
+    col: true,
+    embed: true,
+    hr: true,
+    img: true,
+    input: true,
+    keygen: true,
+    link: true,
+    menuitem: true,
+    meta: true,
+    param: true,
+    source: true,
+    track: true,
+    wbr: true,
+};
+function isVoidElement(element) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).some((element) => voidElements[element.tagName.toLowerCase()]);
+}
+
+function isVisible(element) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).some(
+        (element) => element.offsetWidth || element.offsetHeight || element.getClientRects().length
+    );
+}
+
+const selInput = 'input,select,textarea,button';
+function isInput(element) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).some((element) => matches(element, selInput));
+}
+
+const selFocusable = `${selInput},a[href],[tabindex]`;
+function isFocusable(element) {
+    return matches(element, selFocusable);
+}
+
+function parent(element) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element)?.parentElement;
+}
+
+function filter(element, selector) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).filter((element) => matches(element, selector));
+}
+
+function matches(element, selector) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).some((element) => element.matches(selector));
+}
+
+function closest(element, selector) {
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.startsWith)(selector, '>')) {
+        selector = selector.slice(1);
+    }
+
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isElement)(element)
+        ? element.closest(selector)
+        : (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element)
+              .map((element) => closest(element, selector))
+              .filter(Boolean);
+}
+
+function within(element, selector) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(selector)
+        ? matches(element, selector) || !!closest(element, selector)
+        : element === selector || (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(selector).contains((0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element));
+}
+
+function parents(element, selector) {
+    const elements = [];
+
+    while ((element = parent(element))) {
+        if (!selector || matches(element, selector)) {
+            elements.push(element);
+        }
+    }
+
+    return elements;
+}
+
+function children(element, selector) {
+    element = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(element);
+    const children = element ? (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element.children) : [];
+    return selector ? filter(children, selector) : children;
+}
+
+function index(element, ref) {
+    return ref ? (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element).indexOf((0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(ref)) : children(parent(element)).indexOf(element);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/index.js":
+/*!*************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/index.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "$": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.$),
+/* harmony export */   "$$": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.$$),
+/* harmony export */   "Animation": () => (/* reexport safe */ _animation__WEBPACK_IMPORTED_MODULE_1__.Animation),
+/* harmony export */   "Deferred": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.Deferred),
+/* harmony export */   "Dimensions": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.Dimensions),
+/* harmony export */   "MouseTracker": () => (/* reexport safe */ _mouse__WEBPACK_IMPORTED_MODULE_11__.MouseTracker),
+/* harmony export */   "Transition": () => (/* reexport safe */ _animation__WEBPACK_IMPORTED_MODULE_1__.Transition),
+/* harmony export */   "addClass": () => (/* reexport safe */ _class__WEBPACK_IMPORTED_MODULE_3__.addClass),
+/* harmony export */   "after": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.after),
+/* harmony export */   "ajax": () => (/* reexport safe */ _ajax__WEBPACK_IMPORTED_MODULE_0__.ajax),
+/* harmony export */   "animate": () => (/* reexport safe */ _animation__WEBPACK_IMPORTED_MODULE_1__.animate),
+/* harmony export */   "append": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.append),
+/* harmony export */   "apply": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.apply),
+/* harmony export */   "assign": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.assign),
+/* harmony export */   "attr": () => (/* reexport safe */ _attr__WEBPACK_IMPORTED_MODULE_2__.attr),
+/* harmony export */   "before": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.before),
+/* harmony export */   "boxModelAdjust": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.boxModelAdjust),
+/* harmony export */   "camelize": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.camelize),
+/* harmony export */   "children": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.children),
+/* harmony export */   "clamp": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.clamp),
+/* harmony export */   "closest": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.closest),
+/* harmony export */   "createEvent": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.createEvent),
+/* harmony export */   "css": () => (/* reexport safe */ _style__WEBPACK_IMPORTED_MODULE_17__.css),
+/* harmony export */   "data": () => (/* reexport safe */ _attr__WEBPACK_IMPORTED_MODULE_2__.data),
+/* harmony export */   "dimensions": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.dimensions),
+/* harmony export */   "each": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.each),
+/* harmony export */   "empty": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.empty),
+/* harmony export */   "endsWith": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.endsWith),
+/* harmony export */   "escape": () => (/* reexport safe */ _selector__WEBPACK_IMPORTED_MODULE_16__.escape),
+/* harmony export */   "fastdom": () => (/* reexport safe */ _fastdom__WEBPACK_IMPORTED_MODULE_8__.fastdom),
+/* harmony export */   "filter": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.filter),
+/* harmony export */   "find": () => (/* reexport safe */ _selector__WEBPACK_IMPORTED_MODULE_16__.find),
+/* harmony export */   "findAll": () => (/* reexport safe */ _selector__WEBPACK_IMPORTED_MODULE_16__.findAll),
+/* harmony export */   "findIndex": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.findIndex),
+/* harmony export */   "flipPosition": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.flipPosition),
+/* harmony export */   "fragment": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.fragment),
+/* harmony export */   "getCssVar": () => (/* reexport safe */ _style__WEBPACK_IMPORTED_MODULE_17__.getCssVar),
+/* harmony export */   "getEventPos": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.getEventPos),
+/* harmony export */   "getImage": () => (/* reexport safe */ _ajax__WEBPACK_IMPORTED_MODULE_0__.getImage),
+/* harmony export */   "getIndex": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.getIndex),
+/* harmony export */   "hasAttr": () => (/* reexport safe */ _attr__WEBPACK_IMPORTED_MODULE_2__.hasAttr),
+/* harmony export */   "hasClass": () => (/* reexport safe */ _class__WEBPACK_IMPORTED_MODULE_3__.hasClass),
+/* harmony export */   "hasOwn": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.hasOwn),
+/* harmony export */   "hasTouch": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.hasTouch),
+/* harmony export */   "height": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.height),
+/* harmony export */   "html": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.html),
+/* harmony export */   "hyphenate": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.hyphenate),
+/* harmony export */   "inBrowser": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.inBrowser),
+/* harmony export */   "includes": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.includes),
+/* harmony export */   "index": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.index),
+/* harmony export */   "intersectRect": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.intersectRect),
+/* harmony export */   "isArray": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isArray),
+/* harmony export */   "isBoolean": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isBoolean),
+/* harmony export */   "isDocument": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isDocument),
+/* harmony export */   "isElement": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isElement),
+/* harmony export */   "isEmpty": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isEmpty),
+/* harmony export */   "isEqual": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isEqual),
+/* harmony export */   "isFocusable": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.isFocusable),
+/* harmony export */   "isFunction": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isFunction),
+/* harmony export */   "isInView": () => (/* reexport safe */ _viewport__WEBPACK_IMPORTED_MODULE_18__.isInView),
+/* harmony export */   "isInput": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.isInput),
+/* harmony export */   "isNode": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isNode),
+/* harmony export */   "isNumber": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isNumber),
+/* harmony export */   "isNumeric": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isNumeric),
+/* harmony export */   "isObject": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isObject),
+/* harmony export */   "isPlainObject": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isPlainObject),
+/* harmony export */   "isRtl": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.isRtl),
+/* harmony export */   "isString": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isString),
+/* harmony export */   "isTag": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.isTag),
+/* harmony export */   "isTouch": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.isTouch),
+/* harmony export */   "isUndefined": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isUndefined),
+/* harmony export */   "isVideo": () => (/* reexport safe */ _player__WEBPACK_IMPORTED_MODULE_14__.isVideo),
+/* harmony export */   "isVisible": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.isVisible),
+/* harmony export */   "isVoidElement": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.isVoidElement),
+/* harmony export */   "isWindow": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.isWindow),
+/* harmony export */   "last": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.last),
+/* harmony export */   "matches": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.matches),
+/* harmony export */   "memoize": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.memoize),
+/* harmony export */   "mergeOptions": () => (/* reexport safe */ _options__WEBPACK_IMPORTED_MODULE_13__.mergeOptions),
+/* harmony export */   "mute": () => (/* reexport safe */ _player__WEBPACK_IMPORTED_MODULE_14__.mute),
+/* harmony export */   "noop": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.noop),
+/* harmony export */   "observeIntersection": () => (/* reexport safe */ _observer__WEBPACK_IMPORTED_MODULE_12__.observeIntersection),
+/* harmony export */   "observeMutation": () => (/* reexport safe */ _observer__WEBPACK_IMPORTED_MODULE_12__.observeMutation),
+/* harmony export */   "observeResize": () => (/* reexport safe */ _observer__WEBPACK_IMPORTED_MODULE_12__.observeResize),
+/* harmony export */   "off": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.off),
+/* harmony export */   "offset": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.offset),
+/* harmony export */   "offsetPosition": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.offsetPosition),
+/* harmony export */   "offsetViewport": () => (/* reexport safe */ _viewport__WEBPACK_IMPORTED_MODULE_18__.offsetViewport),
+/* harmony export */   "on": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.on),
+/* harmony export */   "once": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.once),
+/* harmony export */   "parent": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.parent),
+/* harmony export */   "parents": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.parents),
+/* harmony export */   "parseOptions": () => (/* reexport safe */ _options__WEBPACK_IMPORTED_MODULE_13__.parseOptions),
+/* harmony export */   "pause": () => (/* reexport safe */ _player__WEBPACK_IMPORTED_MODULE_14__.pause),
+/* harmony export */   "play": () => (/* reexport safe */ _player__WEBPACK_IMPORTED_MODULE_14__.play),
+/* harmony export */   "pointInRect": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.pointInRect),
+/* harmony export */   "pointerCancel": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.pointerCancel),
+/* harmony export */   "pointerDown": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.pointerDown),
+/* harmony export */   "pointerEnter": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.pointerEnter),
+/* harmony export */   "pointerLeave": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.pointerLeave),
+/* harmony export */   "pointerMove": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.pointerMove),
+/* harmony export */   "pointerUp": () => (/* reexport safe */ _env__WEBPACK_IMPORTED_MODULE_6__.pointerUp),
+/* harmony export */   "position": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.position),
+/* harmony export */   "positionAt": () => (/* reexport safe */ _position__WEBPACK_IMPORTED_MODULE_15__.positionAt),
+/* harmony export */   "prepend": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.prepend),
+/* harmony export */   "propName": () => (/* reexport safe */ _style__WEBPACK_IMPORTED_MODULE_17__.propName),
+/* harmony export */   "query": () => (/* reexport safe */ _selector__WEBPACK_IMPORTED_MODULE_16__.query),
+/* harmony export */   "queryAll": () => (/* reexport safe */ _selector__WEBPACK_IMPORTED_MODULE_16__.queryAll),
+/* harmony export */   "ready": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.ready),
+/* harmony export */   "remove": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.remove),
+/* harmony export */   "removeAttr": () => (/* reexport safe */ _attr__WEBPACK_IMPORTED_MODULE_2__.removeAttr),
+/* harmony export */   "removeClass": () => (/* reexport safe */ _class__WEBPACK_IMPORTED_MODULE_3__.removeClass),
+/* harmony export */   "removeClasses": () => (/* reexport safe */ _class__WEBPACK_IMPORTED_MODULE_3__.removeClasses),
+/* harmony export */   "replaceClass": () => (/* reexport safe */ _class__WEBPACK_IMPORTED_MODULE_3__.replaceClass),
+/* harmony export */   "scrollIntoView": () => (/* reexport safe */ _viewport__WEBPACK_IMPORTED_MODULE_18__.scrollIntoView),
+/* harmony export */   "scrollParents": () => (/* reexport safe */ _viewport__WEBPACK_IMPORTED_MODULE_18__.scrollParents),
+/* harmony export */   "scrollTop": () => (/* reexport safe */ _viewport__WEBPACK_IMPORTED_MODULE_18__.scrollTop),
+/* harmony export */   "scrolledOver": () => (/* reexport safe */ _viewport__WEBPACK_IMPORTED_MODULE_18__.scrolledOver),
+/* harmony export */   "selFocusable": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.selFocusable),
+/* harmony export */   "selInput": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.selInput),
+/* harmony export */   "sortBy": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.sortBy),
+/* harmony export */   "startsWith": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.startsWith),
+/* harmony export */   "swap": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.swap),
+/* harmony export */   "toArray": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.toArray),
+/* harmony export */   "toBoolean": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.toBoolean),
+/* harmony export */   "toEventTargets": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.toEventTargets),
+/* harmony export */   "toFloat": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.toFloat),
+/* harmony export */   "toNode": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.toNode),
+/* harmony export */   "toNodes": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.toNodes),
+/* harmony export */   "toNumber": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.toNumber),
+/* harmony export */   "toPx": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.toPx),
+/* harmony export */   "toWindow": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.toWindow),
+/* harmony export */   "toggleClass": () => (/* reexport safe */ _class__WEBPACK_IMPORTED_MODULE_3__.toggleClass),
+/* harmony export */   "transition": () => (/* reexport safe */ _animation__WEBPACK_IMPORTED_MODULE_1__.transition),
+/* harmony export */   "trigger": () => (/* reexport safe */ _event__WEBPACK_IMPORTED_MODULE_7__.trigger),
+/* harmony export */   "ucfirst": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.ucfirst),
+/* harmony export */   "uniqueBy": () => (/* reexport safe */ _lang__WEBPACK_IMPORTED_MODULE_10__.uniqueBy),
+/* harmony export */   "unwrap": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.unwrap),
+/* harmony export */   "width": () => (/* reexport safe */ _dimensions__WEBPACK_IMPORTED_MODULE_4__.width),
+/* harmony export */   "within": () => (/* reexport safe */ _filter__WEBPACK_IMPORTED_MODULE_9__.within),
+/* harmony export */   "wrapAll": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.wrapAll),
+/* harmony export */   "wrapInner": () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.wrapInner)
+/* harmony export */ });
+/* harmony import */ var _ajax__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ajax */ "./node_modules/uikit/src/js/util/ajax.js");
+/* harmony import */ var _animation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./animation */ "./node_modules/uikit/src/js/util/animation.js");
+/* harmony import */ var _attr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./attr */ "./node_modules/uikit/src/js/util/attr.js");
+/* harmony import */ var _class__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./class */ "./node_modules/uikit/src/js/util/class.js");
+/* harmony import */ var _dimensions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dimensions */ "./node_modules/uikit/src/js/util/dimensions.js");
+/* harmony import */ var _dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./dom */ "./node_modules/uikit/src/js/util/dom.js");
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./env */ "./node_modules/uikit/src/js/util/env.js");
+/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./event */ "./node_modules/uikit/src/js/util/event.js");
+/* harmony import */ var _fastdom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./fastdom */ "./node_modules/uikit/src/js/util/fastdom.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./filter */ "./node_modules/uikit/src/js/util/filter.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+/* harmony import */ var _mouse__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./mouse */ "./node_modules/uikit/src/js/util/mouse.js");
+/* harmony import */ var _observer__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./observer */ "./node_modules/uikit/src/js/util/observer.js");
+/* harmony import */ var _options__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./options */ "./node_modules/uikit/src/js/util/options.js");
+/* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./player */ "./node_modules/uikit/src/js/util/player.js");
+/* harmony import */ var _position__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./position */ "./node_modules/uikit/src/js/util/position.js");
+/* harmony import */ var _selector__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./selector */ "./node_modules/uikit/src/js/util/selector.js");
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./style */ "./node_modules/uikit/src/js/util/style.js");
+/* harmony import */ var _viewport__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./viewport */ "./node_modules/uikit/src/js/util/viewport.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/lang.js":
+/*!************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/lang.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Deferred": () => (/* binding */ Deferred),
+/* harmony export */   "Dimensions": () => (/* binding */ Dimensions),
+/* harmony export */   "assign": () => (/* binding */ assign),
+/* harmony export */   "camelize": () => (/* binding */ camelize),
+/* harmony export */   "clamp": () => (/* binding */ clamp),
+/* harmony export */   "each": () => (/* binding */ each),
+/* harmony export */   "endsWith": () => (/* binding */ endsWith),
+/* harmony export */   "findIndex": () => (/* binding */ findIndex),
+/* harmony export */   "getIndex": () => (/* binding */ getIndex),
+/* harmony export */   "hasOwn": () => (/* binding */ hasOwn),
+/* harmony export */   "hyphenate": () => (/* binding */ hyphenate),
+/* harmony export */   "includes": () => (/* binding */ includes),
+/* harmony export */   "intersectRect": () => (/* binding */ intersectRect),
+/* harmony export */   "isArray": () => (/* binding */ isArray),
+/* harmony export */   "isBoolean": () => (/* binding */ isBoolean),
+/* harmony export */   "isDocument": () => (/* binding */ isDocument),
+/* harmony export */   "isElement": () => (/* binding */ isElement),
+/* harmony export */   "isEmpty": () => (/* binding */ isEmpty),
+/* harmony export */   "isEqual": () => (/* binding */ isEqual),
+/* harmony export */   "isFunction": () => (/* binding */ isFunction),
+/* harmony export */   "isNode": () => (/* binding */ isNode),
+/* harmony export */   "isNumber": () => (/* binding */ isNumber),
+/* harmony export */   "isNumeric": () => (/* binding */ isNumeric),
+/* harmony export */   "isObject": () => (/* binding */ isObject),
+/* harmony export */   "isPlainObject": () => (/* binding */ isPlainObject),
+/* harmony export */   "isString": () => (/* binding */ isString),
+/* harmony export */   "isUndefined": () => (/* binding */ isUndefined),
+/* harmony export */   "isWindow": () => (/* binding */ isWindow),
+/* harmony export */   "last": () => (/* binding */ last),
+/* harmony export */   "memoize": () => (/* binding */ memoize),
+/* harmony export */   "noop": () => (/* binding */ noop),
+/* harmony export */   "pointInRect": () => (/* binding */ pointInRect),
+/* harmony export */   "sortBy": () => (/* binding */ sortBy),
+/* harmony export */   "startsWith": () => (/* binding */ startsWith),
+/* harmony export */   "swap": () => (/* binding */ swap),
+/* harmony export */   "toArray": () => (/* binding */ toArray),
+/* harmony export */   "toBoolean": () => (/* binding */ toBoolean),
+/* harmony export */   "toFloat": () => (/* binding */ toFloat),
+/* harmony export */   "toNode": () => (/* binding */ toNode),
+/* harmony export */   "toNodes": () => (/* binding */ toNodes),
+/* harmony export */   "toNumber": () => (/* binding */ toNumber),
+/* harmony export */   "toWindow": () => (/* binding */ toWindow),
+/* harmony export */   "ucfirst": () => (/* binding */ ucfirst),
+/* harmony export */   "uniqueBy": () => (/* binding */ uniqueBy)
+/* harmony export */ });
+const { hasOwnProperty, toString } = Object.prototype;
+
+function hasOwn(obj, key) {
+    return hasOwnProperty.call(obj, key);
+}
+
+const hyphenateRe = /\B([A-Z])/g;
+
+const hyphenate = memoize((str) => str.replace(hyphenateRe, '-$1').toLowerCase());
+
+const camelizeRe = /-(\w)/g;
+
+const camelize = memoize((str) => str.replace(camelizeRe, toUpper));
+
+const ucfirst = memoize((str) =>
+    str.length ? toUpper(null, str.charAt(0)) + str.slice(1) : ''
+);
+
+function toUpper(_, c) {
+    return c ? c.toUpperCase() : '';
+}
+
+function startsWith(str, search) {
+    return str?.startsWith?.(search);
+}
+
+function endsWith(str, search) {
+    return str?.endsWith?.(search);
+}
+
+function includes(obj, search) {
+    return obj?.includes?.(search);
+}
+
+function findIndex(array, predicate) {
+    return array?.findIndex?.(predicate);
+}
+
+const { isArray, from: toArray } = Array;
+const { assign } = Object;
+
+function isFunction(obj) {
+    return typeof obj === 'function';
+}
+
+function isObject(obj) {
+    return obj !== null && typeof obj === 'object';
+}
+
+function isPlainObject(obj) {
+    return toString.call(obj) === '[object Object]';
+}
+
+function isWindow(obj) {
+    return isObject(obj) && obj === obj.window;
+}
+
+function isDocument(obj) {
+    return nodeType(obj) === 9;
+}
+
+function isNode(obj) {
+    return nodeType(obj) >= 1;
+}
+
+function isElement(obj) {
+    return nodeType(obj) === 1;
+}
+
+function nodeType(obj) {
+    return !isWindow(obj) && isObject(obj) && obj.nodeType;
+}
+
+function isBoolean(value) {
+    return typeof value === 'boolean';
+}
+
+function isString(value) {
+    return typeof value === 'string';
+}
+
+function isNumber(value) {
+    return typeof value === 'number';
+}
+
+function isNumeric(value) {
+    return isNumber(value) || (isString(value) && !isNaN(value - parseFloat(value)));
+}
+
+function isEmpty(obj) {
+    return !(isArray(obj) ? obj.length : isObject(obj) ? Object.keys(obj).length : false);
+}
+
+function isUndefined(value) {
+    return value === void 0;
+}
+
+function toBoolean(value) {
+    return isBoolean(value)
+        ? value
+        : value === 'true' || value === '1' || value === ''
+        ? true
+        : value === 'false' || value === '0'
+        ? false
+        : value;
+}
+
+function toNumber(value) {
+    const number = Number(value);
+    return isNaN(number) ? false : number;
+}
+
+function toFloat(value) {
+    return parseFloat(value) || 0;
+}
+
+function toNode(element) {
+    return toNodes(element)[0];
+}
+
+function toNodes(element) {
+    return (element && (isNode(element) ? [element] : Array.from(element).filter(isNode))) || [];
+}
+
+function toWindow(element) {
+    if (isWindow(element)) {
+        return element;
+    }
+
+    element = toNode(element);
+    const document = isDocument(element) ? element : element?.ownerDocument;
+
+    return document?.defaultView || window;
+}
+
+function isEqual(value, other) {
+    return (
+        value === other ||
+        (isObject(value) &&
+            isObject(other) &&
+            Object.keys(value).length === Object.keys(other).length &&
+            each(value, (val, key) => val === other[key]))
+    );
+}
+
+function swap(value, a, b) {
+    return value.replace(new RegExp(`${a}|${b}`, 'g'), (match) => (match === a ? b : a));
+}
+
+function last(array) {
+    return array[array.length - 1];
+}
+
+function each(obj, cb) {
+    for (const key in obj) {
+        if (false === cb(obj[key], key)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function sortBy(array, prop) {
+    return array
+        .slice()
+        .sort(({ [prop]: propA = 0 }, { [prop]: propB = 0 }) =>
+            propA > propB ? 1 : propB > propA ? -1 : 0
+        );
+}
+
+function uniqueBy(array, prop) {
+    const seen = new Set();
+    return array.filter(({ [prop]: check }) => (seen.has(check) ? false : seen.add(check)));
+}
+
+function clamp(number, min = 0, max = 1) {
+    return Math.min(Math.max(toNumber(number) || 0, min), max);
+}
+
+function noop() {}
+
+function intersectRect(...rects) {
+    return [
+        ['bottom', 'top'],
+        ['right', 'left'],
+    ].every(
+        ([minProp, maxProp]) =>
+            Math.min(...rects.map(({ [minProp]: min }) => min)) -
+                Math.max(...rects.map(({ [maxProp]: max }) => max)) >
+            0
+    );
+}
+
+function pointInRect(point, rect) {
+    return (
+        point.x <= rect.right &&
+        point.x >= rect.left &&
+        point.y <= rect.bottom &&
+        point.y >= rect.top
+    );
+}
+
+function ratio(dimensions, prop, value) {
+    const aProp = prop === 'width' ? 'height' : 'width';
+
+    return {
+        [aProp]: dimensions[prop]
+            ? Math.round((value * dimensions[aProp]) / dimensions[prop])
+            : dimensions[aProp],
+        [prop]: value,
+    };
+}
+
+function contain(dimensions, maxDimensions) {
+    dimensions = { ...dimensions };
+
+    for (const prop in dimensions) {
+        dimensions =
+            dimensions[prop] > maxDimensions[prop]
+                ? ratio(dimensions, prop, maxDimensions[prop])
+                : dimensions;
+    }
+
+    return dimensions;
+}
+
+function cover(dimensions, maxDimensions) {
+    dimensions = contain(dimensions, maxDimensions);
+
+    for (const prop in dimensions) {
+        dimensions =
+            dimensions[prop] < maxDimensions[prop]
+                ? ratio(dimensions, prop, maxDimensions[prop])
+                : dimensions;
+    }
+
+    return dimensions;
+}
+
+const Dimensions = { ratio, contain, cover };
+
+function getIndex(i, elements, current = 0, finite = false) {
+    elements = toNodes(elements);
+
+    const { length } = elements;
+
+    if (!length) {
+        return -1;
+    }
+
+    i = isNumeric(i)
+        ? toNumber(i)
+        : i === 'next'
+        ? current + 1
+        : i === 'previous'
+        ? current - 1
+        : elements.indexOf(toNode(i));
+
+    if (finite) {
+        return clamp(i, 0, length - 1);
+    }
+
+    i %= length;
+
+    return i < 0 ? i + length : i;
+}
+
+function memoize(fn) {
+    const cache = Object.create(null);
+    return (key) => cache[key] || (cache[key] = fn(key));
+}
+
+class Deferred {
+    constructor() {
+        this.promise = new Promise((resolve, reject) => {
+            this.reject = reject;
+            this.resolve = resolve;
+        });
+    }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/mouse.js":
+/*!*************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/mouse.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MouseTracker": () => (/* binding */ MouseTracker)
+/* harmony export */ });
+/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./event */ "./node_modules/uikit/src/js/util/event.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+function MouseTracker() {}
+
+MouseTracker.prototype = {
+    positions: [],
+
+    init() {
+        this.positions = [];
+
+        let position;
+        this.unbind = (0,_event__WEBPACK_IMPORTED_MODULE_0__.on)(document, 'mousemove', (e) => (position = (0,_event__WEBPACK_IMPORTED_MODULE_0__.getEventPos)(e)));
+        this.interval = setInterval(() => {
+            if (!position) {
+                return;
+            }
+
+            this.positions.push(position);
+
+            if (this.positions.length > 5) {
+                this.positions.shift();
+            }
+        }, 50);
+    },
+
+    cancel() {
+        this.unbind?.();
+        this.interval && clearInterval(this.interval);
+    },
+
+    movesTo(target) {
+        if (this.positions.length < 2) {
+            return false;
+        }
+
+        const p = target.getBoundingClientRect();
+        const { left, right, top, bottom } = p;
+
+        const [prevPosition] = this.positions;
+        const position = (0,_lang__WEBPACK_IMPORTED_MODULE_1__.last)(this.positions);
+        const path = [prevPosition, position];
+
+        if ((0,_lang__WEBPACK_IMPORTED_MODULE_1__.pointInRect)(position, p)) {
+            return false;
+        }
+
+        const diagonals = [
+            [
+                { x: left, y: top },
+                { x: right, y: bottom },
+            ],
+            [
+                { x: left, y: bottom },
+                { x: right, y: top },
+            ],
+        ];
+
+        return diagonals.some((diagonal) => {
+            const intersection = intersect(path, diagonal);
+            return intersection && (0,_lang__WEBPACK_IMPORTED_MODULE_1__.pointInRect)(intersection, p);
+        });
+    },
+};
+
+// Inspired by http://paulbourke.net/geometry/pointlineplane/
+function intersect([{ x: x1, y: y1 }, { x: x2, y: y2 }], [{ x: x3, y: y3 }, { x: x4, y: y4 }]) {
+    const denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+
+    // Lines are parallel
+    if (denominator === 0) {
+        return false;
+    }
+
+    const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator;
+
+    if (ua < 0) {
+        return false;
+    }
+
+    // Return an object with the x and y coordinates of the intersection
+    return { x: x1 + ua * (x2 - x1), y: y1 + ua * (y2 - y1) };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/observer.js":
+/*!****************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/observer.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "observeIntersection": () => (/* binding */ observeIntersection),
+/* harmony export */   "observeMutation": () => (/* binding */ observeMutation),
+/* harmony export */   "observeResize": () => (/* binding */ observeResize)
+/* harmony export */ });
+/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./event */ "./node_modules/uikit/src/js/util/event.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+/* harmony import */ var _fastdom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fastdom */ "./node_modules/uikit/src/js/util/fastdom.js");
+/* harmony import */ var _env__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./env */ "./node_modules/uikit/src/js/util/env.js");
+
+
+
+
+
+function observeIntersection(targets, cb, options, intersecting = true) {
+    const observer = new IntersectionObserver(
+        intersecting
+            ? (entries, observer) => {
+                  if (entries.some((entry) => entry.isIntersecting)) {
+                      cb(entries, observer);
+                  }
+              }
+            : cb,
+        options
+    );
+    for (const el of (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(targets)) {
+        observer.observe(el);
+    }
+
+    return observer;
+}
+
+const hasResizeObserver = _env__WEBPACK_IMPORTED_MODULE_1__.inBrowser && window.ResizeObserver;
+function observeResize(targets, cb, options = { box: 'border-box' }) {
+    if (hasResizeObserver) {
+        return observe(ResizeObserver, targets, cb, options);
+    }
+
+    // Fallback Safari < 13.1
+    initResizeListener();
+    listeners.add(cb);
+
+    return {
+        disconnect() {
+            listeners.delete(cb);
+        },
+    };
+}
+
+let listeners;
+function initResizeListener() {
+    if (listeners) {
+        return;
+    }
+
+    listeners = new Set();
+
+    // throttle 'resize'
+    let pendingResize;
+    const handleResize = () => {
+        if (pendingResize) {
+            return;
+        }
+        pendingResize = true;
+        _fastdom__WEBPACK_IMPORTED_MODULE_2__.fastdom.read(() => (pendingResize = false));
+        for (const listener of listeners) {
+            listener();
+        }
+    };
+
+    (0,_event__WEBPACK_IMPORTED_MODULE_3__.on)(window, 'load resize', handleResize);
+    (0,_event__WEBPACK_IMPORTED_MODULE_3__.on)(document, 'loadedmetadata load', handleResize, true);
+}
+
+function observeMutation(targets, cb, options) {
+    return observe(MutationObserver, targets, cb, options);
+}
+
+function observe(Observer, targets, cb, options) {
+    const observer = new Observer(cb);
+    for (const el of (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(targets)) {
+        observer.observe(el, options);
+    }
+
+    return observer;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/options.js":
+/*!***************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/options.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "mergeOptions": () => (/* binding */ mergeOptions),
+/* harmony export */   "parseOptions": () => (/* binding */ parseOptions)
+/* harmony export */ });
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+const strats = {};
+
+strats.events =
+    strats.created =
+    strats.beforeConnect =
+    strats.connected =
+    strats.beforeDisconnect =
+    strats.disconnected =
+    strats.destroy =
+        concatStrat;
+
+// args strategy
+strats.args = function (parentVal, childVal) {
+    return childVal !== false && concatStrat(childVal || parentVal);
+};
+
+// update strategy
+strats.update = function (parentVal, childVal) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.sortBy)(
+        concatStrat(parentVal, (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isFunction)(childVal) ? { read: childVal } : childVal),
+        'order'
+    );
+};
+
+// property strategy
+strats.props = function (parentVal, childVal) {
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isArray)(childVal)) {
+        const value = {};
+        for (const key of childVal) {
+            value[key] = String;
+        }
+        childVal = value;
+    }
+
+    return strats.methods(parentVal, childVal);
+};
+
+// extend strategy
+strats.computed = strats.methods = function (parentVal, childVal) {
+    return childVal ? (parentVal ? { ...parentVal, ...childVal } : childVal) : parentVal;
+};
+
+// data strategy
+strats.data = function (parentVal, childVal, vm) {
+    if (!vm) {
+        if (!childVal) {
+            return parentVal;
+        }
+
+        if (!parentVal) {
+            return childVal;
+        }
+
+        return function (vm) {
+            return mergeFnData(parentVal, childVal, vm);
+        };
+    }
+
+    return mergeFnData(parentVal, childVal, vm);
+};
+
+function mergeFnData(parentVal, childVal, vm) {
+    return strats.computed(
+        (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isFunction)(parentVal) ? parentVal.call(vm, vm) : parentVal,
+        (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isFunction)(childVal) ? childVal.call(vm, vm) : childVal
+    );
+}
+
+// concat strategy
+function concatStrat(parentVal, childVal) {
+    parentVal = parentVal && !(0,_lang__WEBPACK_IMPORTED_MODULE_0__.isArray)(parentVal) ? [parentVal] : parentVal;
+
+    return childVal
+        ? parentVal
+            ? parentVal.concat(childVal)
+            : (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isArray)(childVal)
+            ? childVal
+            : [childVal]
+        : parentVal;
+}
+
+// default strategy
+function defaultStrat(parentVal, childVal) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(childVal) ? parentVal : childVal;
+}
+
+function mergeOptions(parent, child, vm) {
+    const options = {};
+
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isFunction)(child)) {
+        child = child.options;
+    }
+
+    if (child.extends) {
+        parent = mergeOptions(parent, child.extends, vm);
+    }
+
+    if (child.mixins) {
+        for (const mixin of child.mixins) {
+            parent = mergeOptions(parent, mixin, vm);
+        }
+    }
+
+    for (const key in parent) {
+        mergeKey(key);
+    }
+
+    for (const key in child) {
+        if (!(0,_lang__WEBPACK_IMPORTED_MODULE_0__.hasOwn)(parent, key)) {
+            mergeKey(key);
+        }
+    }
+
+    function mergeKey(key) {
+        options[key] = (strats[key] || defaultStrat)(parent[key], child[key], vm);
+    }
+
+    return options;
+}
+
+function parseOptions(options, args = []) {
+    try {
+        return options
+            ? (0,_lang__WEBPACK_IMPORTED_MODULE_0__.startsWith)(options, '{')
+                ? JSON.parse(options)
+                : args.length && !(0,_lang__WEBPACK_IMPORTED_MODULE_0__.includes)(options, ':')
+                ? { [args[0]]: options }
+                : options.split(';').reduce((options, option) => {
+                      const [key, value] = option.split(/:(.*)/);
+                      if (key && !(0,_lang__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(value)) {
+                          options[key.trim()] = value.trim();
+                      }
+                      return options;
+                  }, {})
+            : {};
+    } catch (e) {
+        return {};
+    }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/player.js":
+/*!**************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/player.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "isVideo": () => (/* binding */ isVideo),
+/* harmony export */   "mute": () => (/* binding */ mute),
+/* harmony export */   "pause": () => (/* binding */ pause),
+/* harmony export */   "play": () => (/* binding */ play)
+/* harmony export */ });
+/* harmony import */ var _dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dom */ "./node_modules/uikit/src/js/util/dom.js");
+/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./event */ "./node_modules/uikit/src/js/util/event.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+
+function play(el) {
+    if (isIFrame(el)) {
+        call(el, { func: 'playVideo', method: 'play' });
+    }
+
+    if (isHTML5(el)) {
+        try {
+            el.play().catch(_lang__WEBPACK_IMPORTED_MODULE_0__.noop);
+        } catch (e) {
+            // noop
+        }
+    }
+}
+
+function pause(el) {
+    if (isIFrame(el)) {
+        call(el, { func: 'pauseVideo', method: 'pause' });
+    }
+
+    if (isHTML5(el)) {
+        el.pause();
+    }
+}
+
+function mute(el) {
+    if (isIFrame(el)) {
+        call(el, { func: 'mute', method: 'setVolume', value: 0 });
+    }
+
+    if (isHTML5(el)) {
+        el.muted = true;
+    }
+}
+
+function isVideo(el) {
+    return isHTML5(el) || isIFrame(el);
+}
+
+function isHTML5(el) {
+    return (0,_dom__WEBPACK_IMPORTED_MODULE_1__.isTag)(el, 'video');
+}
+
+function isIFrame(el) {
+    return (0,_dom__WEBPACK_IMPORTED_MODULE_1__.isTag)(el, 'iframe') && (isYoutube(el) || isVimeo(el));
+}
+
+function isYoutube(el) {
+    return !!el.src.match(
+        /\/\/.*?youtube(-nocookie)?\.[a-z]+\/(watch\?v=[^&\s]+|embed)|youtu\.be\/.*/
+    );
+}
+
+function isVimeo(el) {
+    return !!el.src.match(/vimeo\.com\/video\/.*/);
+}
+
+async function call(el, cmd) {
+    await enableApi(el);
+    post(el, cmd);
+}
+
+function post(el, cmd) {
+    try {
+        el.contentWindow.postMessage(JSON.stringify({ event: 'command', ...cmd }), '*');
+    } catch (e) {
+        // noop
+    }
+}
+
+const stateKey = '_ukPlayer';
+let counter = 0;
+function enableApi(el) {
+    if (el[stateKey]) {
+        return el[stateKey];
+    }
+
+    const youtube = isYoutube(el);
+    const vimeo = isVimeo(el);
+
+    const id = ++counter;
+    let poller;
+
+    return (el[stateKey] = new Promise((resolve) => {
+        youtube &&
+            (0,_event__WEBPACK_IMPORTED_MODULE_2__.once)(el, 'load', () => {
+                const listener = () => post(el, { event: 'listening', id });
+                poller = setInterval(listener, 100);
+                listener();
+            });
+
+        (0,_event__WEBPACK_IMPORTED_MODULE_2__.once)(window, 'message', resolve, false, ({ data }) => {
+            try {
+                data = JSON.parse(data);
+                return (
+                    data &&
+                    ((youtube && data.id === id && data.event === 'onReady') ||
+                        (vimeo && Number(data.player_id) === id))
+                );
+            } catch (e) {
+                // noop
+            }
+        });
+
+        el.src = `${el.src}${(0,_lang__WEBPACK_IMPORTED_MODULE_0__.includes)(el.src, '?') ? '&' : '?'}${
+            youtube ? 'enablejsapi=1' : `api=1&player_id=${id}`
+        }`;
+    }).then(() => clearInterval(poller)));
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/position.js":
+/*!****************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/position.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "positionAt": () => (/* binding */ positionAt)
+/* harmony export */ });
+/* harmony import */ var _dimensions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dimensions */ "./node_modules/uikit/src/js/util/dimensions.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+/* harmony import */ var _viewport__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./viewport */ "./node_modules/uikit/src/js/util/viewport.js");
+
+
+
+
+const dirs = [
+    ['width', 'x', 'left', 'right'],
+    ['height', 'y', 'top', 'bottom'],
+];
+
+function positionAt(element, target, options) {
+    options = {
+        attach: {
+            element: ['left', 'top'],
+            target: ['left', 'top'],
+            ...options.attach,
+        },
+        offset: [0, 0],
+        ...options,
+    };
+
+    const dim = options.flip
+        ? attachToWithFlip(element, target, options)
+        : attachTo(element, target, options);
+
+    (0,_dimensions__WEBPACK_IMPORTED_MODULE_0__.offset)(element, dim);
+}
+
+function attachTo(element, target, options) {
+    let { attach, offset: offsetBy } = {
+        attach: {
+            element: ['left', 'top'],
+            target: ['left', 'top'],
+            ...options.attach,
+        },
+        offset: [0, 0],
+        ...options,
+    };
+
+    const position = (0,_dimensions__WEBPACK_IMPORTED_MODULE_0__.offset)(element);
+    const targetOffset = (0,_dimensions__WEBPACK_IMPORTED_MODULE_0__.offset)(target);
+    for (const [i, [prop, dir, start, end]] of Object.entries(dirs)) {
+        position[start] = position[dir] =
+            targetOffset[start] +
+            moveBy(attach.target[i], end, targetOffset[prop]) -
+            moveBy(attach.element[i], end, position[prop]) +
+            +offsetBy[i];
+        position[end] = position[start] + position[prop];
+    }
+    return position;
+}
+
+function moveBy(start, end, dim) {
+    return start === 'center' ? dim / 2 : start === end ? dim : 0;
+}
+
+function attachToWithFlip(element, target, options) {
+    const position = attachTo(element, target, options);
+    const targetDim = (0,_dimensions__WEBPACK_IMPORTED_MODULE_0__.offset)(target);
+
+    let {
+        flip,
+        attach: { element: elAttach, target: targetAttach },
+        offset: elOffset,
+        boundary,
+        viewport,
+        viewportOffset,
+    } = options;
+
+    let viewports = (0,_viewport__WEBPACK_IMPORTED_MODULE_1__.scrollParents)(element);
+    if (boundary === target) {
+        viewports = viewports.filter((viewport) => viewport !== boundary);
+    }
+    const [scrollElement] = viewports;
+    viewports.push(viewport);
+
+    const offsetPosition = { ...position };
+    for (const [i, [prop, dir, start, end]] of Object.entries(dirs)) {
+        if (flip !== true && !(0,_lang__WEBPACK_IMPORTED_MODULE_2__.includes)(flip, dir)) {
+            continue;
+        }
+
+        const willFlip =
+            !intersectLine(position, targetDim, i) && intersectLine(position, targetDim, 1 - i);
+
+        viewport = getIntersectionArea(...viewports.filter(Boolean).map(_viewport__WEBPACK_IMPORTED_MODULE_1__.offsetViewport));
+
+        if (viewportOffset) {
+            viewport[start] += viewportOffset;
+            viewport[end] -= viewportOffset;
+        }
+
+        if (boundary && !willFlip && position[prop] <= (0,_dimensions__WEBPACK_IMPORTED_MODULE_0__.offset)(boundary)[prop]) {
+            viewport = getIntersectionArea(viewport, (0,_dimensions__WEBPACK_IMPORTED_MODULE_0__.offset)(boundary));
+        }
+
+        const isInStartBoundary = position[start] >= viewport[start];
+        const isInEndBoundary = position[end] <= viewport[end];
+
+        if (isInStartBoundary && isInEndBoundary) {
+            continue;
+        }
+
+        let offsetBy;
+
+        // Flip
+        if (willFlip) {
+            if (
+                (elAttach[i] === end && isInStartBoundary) ||
+                (elAttach[i] === start && isInEndBoundary)
+            ) {
+                continue;
+            }
+
+            offsetBy =
+                (elAttach[i] === start
+                    ? -position[prop]
+                    : elAttach[i] === end
+                    ? position[prop]
+                    : 0) +
+                (targetAttach[i] === start
+                    ? targetDim[prop]
+                    : targetAttach[i] === end
+                    ? -targetDim[prop]
+                    : 0) -
+                elOffset[i] * 2;
+
+            if (
+                !isInScrollArea(
+                    {
+                        ...position,
+                        [start]: position[start] + offsetBy,
+                        [end]: position[end] + offsetBy,
+                    },
+                    scrollElement,
+                    i
+                )
+            ) {
+                if (isInScrollArea(position, scrollElement, i)) {
+                    continue;
+                }
+
+                if (options.recursion) {
+                    return false;
+                }
+
+                if (flip === true || (0,_lang__WEBPACK_IMPORTED_MODULE_2__.includes)(flip, dirs[1 - i][1])) {
+                    const newPos = attachToWithFlip(element, target, {
+                        ...options,
+                        attach: {
+                            element: elAttach.map(flipDir).reverse(),
+                            target: targetAttach.map(flipDir).reverse(),
+                        },
+                        offset: elOffset.reverse(),
+                        flip: flip === true ? flip : [...flip, dirs[1 - i][1]],
+                        recursion: true,
+                    });
+
+                    if (newPos && isInScrollArea(newPos, scrollElement, 1 - i)) {
+                        return newPos;
+                    }
+                }
+            }
+
+            // Move
+        } else {
+            offsetBy =
+                (0,_lang__WEBPACK_IMPORTED_MODULE_2__.clamp)(
+                    (0,_lang__WEBPACK_IMPORTED_MODULE_2__.clamp)(position[start], viewport[start], viewport[end] - position[prop]),
+                    targetDim[start] - position[prop] + elOffset[i],
+                    targetDim[end] - elOffset[i]
+                ) - position[start];
+        }
+
+        offsetPosition[start] = position[dir] = position[start] + offsetBy;
+        offsetPosition[end] += offsetBy;
+    }
+
+    return offsetPosition;
+}
+
+function getIntersectionArea(...rects) {
+    let area = {};
+    for (const rect of rects) {
+        for (const [, , start, end] of dirs) {
+            area[start] = Math.max(area[start] || 0, rect[start]);
+            area[end] = Math.min(...[area[end], rect[end]].filter(Boolean));
+        }
+    }
+    return area;
+}
+
+function isInScrollArea(position, scrollElement, dir) {
+    const viewport = (0,_viewport__WEBPACK_IMPORTED_MODULE_1__.offsetViewport)(scrollElement, false);
+    const [prop, , start, end] = dirs[dir];
+    viewport[start] -= scrollElement[`scroll${(0,_lang__WEBPACK_IMPORTED_MODULE_2__.ucfirst)(start)}`];
+    viewport[end] = viewport[start] + scrollElement[`scroll${(0,_lang__WEBPACK_IMPORTED_MODULE_2__.ucfirst)(prop)}`];
+
+    return position[start] >= viewport[start] && position[end] <= viewport[end];
+}
+
+function intersectLine(dimA, dimB, dir) {
+    const [, , start, end] = dirs[dir];
+    return dimA[end] > dimB[start] && dimB[end] > dimA[start];
+}
+
+function flipDir(prop) {
+    for (let i = 0; i < dirs.length; i++) {
+        const index = dirs[i].indexOf(prop);
+        if (~index) {
+            return dirs[1 - i][(index % 2) + 2];
+        }
+    }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/selector.js":
+/*!****************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/selector.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "escape": () => (/* binding */ escape),
+/* harmony export */   "find": () => (/* binding */ find),
+/* harmony export */   "findAll": () => (/* binding */ findAll),
+/* harmony export */   "query": () => (/* binding */ query),
+/* harmony export */   "queryAll": () => (/* binding */ queryAll)
+/* harmony export */ });
+/* harmony import */ var _attr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./attr */ "./node_modules/uikit/src/js/util/attr.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "./node_modules/uikit/src/js/util/filter.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+
+function query(selector, context) {
+    return find(selector, getContext(selector, context));
+}
+
+function queryAll(selector, context) {
+    return findAll(selector, getContext(selector, context));
+}
+
+function find(selector, context) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNode)(_query(selector, context, 'querySelector'));
+}
+
+function findAll(selector, context) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(_query(selector, context, 'querySelectorAll'));
+}
+
+const contextSelectorRe = /(^|[^\\],)\s*[!>+~-]/;
+const isContextSelector = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.memoize)((selector) => selector.match(contextSelectorRe));
+
+function getContext(selector, context = document) {
+    return ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(selector) && isContextSelector(selector)) || (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isDocument)(context)
+        ? context
+        : context.ownerDocument;
+}
+
+const contextSanitizeRe = /([!>+~-])(?=\s+[!>+~-]|\s*$)/g;
+const sanatize = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.memoize)((selector) => selector.replace(contextSanitizeRe, '$1 *'));
+
+function _query(selector, context = document, queryFn) {
+    if (!selector || !(0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(selector)) {
+        return selector;
+    }
+
+    selector = sanatize(selector);
+
+    if (isContextSelector(selector)) {
+        const split = splitSelector(selector);
+        selector = '';
+        for (let sel of split) {
+            let ctx = context;
+
+            if (sel[0] === '!') {
+                const selectors = sel.substr(1).trim().split(' ');
+                ctx = (0,_filter__WEBPACK_IMPORTED_MODULE_1__.closest)((0,_filter__WEBPACK_IMPORTED_MODULE_1__.parent)(context), selectors[0]);
+                sel = selectors.slice(1).join(' ').trim();
+                if (!sel.length && split.length === 1) {
+                    return ctx;
+                }
+            }
+
+            if (sel[0] === '-') {
+                const selectors = sel.substr(1).trim().split(' ');
+                const prev = (ctx || context).previousElementSibling;
+                ctx = (0,_filter__WEBPACK_IMPORTED_MODULE_1__.matches)(prev, sel.substr(1)) ? prev : null;
+                sel = selectors.slice(1).join(' ');
+            }
+
+            if (ctx) {
+                selector += `${selector ? ',' : ''}${domPath(ctx)} ${sel}`;
+            }
+        }
+
+        context = document;
+    }
+
+    try {
+        return context[queryFn](selector);
+    } catch (e) {
+        return null;
+    }
+}
+
+const selectorRe = /.*?[^\\](?:,|$)/g;
+
+const splitSelector = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.memoize)((selector) =>
+    selector.match(selectorRe).map((selector) => selector.replace(/,$/, '').trim())
+);
+
+function domPath(element) {
+    const names = [];
+    while (element.parentNode) {
+        const id = (0,_attr__WEBPACK_IMPORTED_MODULE_2__.attr)(element, 'id');
+        if (id) {
+            names.unshift(`#${escape(id)}`);
+            break;
+        } else {
+            let { tagName } = element;
+            if (tagName !== 'HTML') {
+                tagName += `:nth-child(${(0,_filter__WEBPACK_IMPORTED_MODULE_1__.index)(element) + 1})`;
+            }
+            names.unshift(tagName);
+            element = element.parentNode;
+        }
+    }
+    return names.join(' > ');
+}
+
+function escape(css) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(css) ? CSS.escape(css) : '';
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/style.js":
+/*!*************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/style.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "css": () => (/* binding */ css),
+/* harmony export */   "getCssVar": () => (/* binding */ getCssVar),
+/* harmony export */   "propName": () => (/* binding */ propName)
+/* harmony export */ });
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+const cssNumber = {
+    'animation-iteration-count': true,
+    'column-count': true,
+    'fill-opacity': true,
+    'flex-grow': true,
+    'flex-shrink': true,
+    'font-weight': true,
+    'line-height': true,
+    opacity: true,
+    order: true,
+    orphans: true,
+    'stroke-dasharray': true,
+    'stroke-dashoffset': true,
+    widows: true,
+    'z-index': true,
+    zoom: true,
+};
+
+function css(element, property, value, priority = '') {
+    const elements = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.toNodes)(element);
+    for (const element of elements) {
+        if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isString)(property)) {
+            property = propName(property);
+
+            if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(value)) {
+                return getComputedStyle(element).getPropertyValue(property);
+            } else {
+                element.style.setProperty(
+                    property,
+                    (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isNumeric)(value) && !cssNumber[property]
+                        ? `${value}px`
+                        : value || (0,_lang__WEBPACK_IMPORTED_MODULE_0__.isNumber)(value)
+                        ? value
+                        : '',
+                    priority
+                );
+            }
+        } else if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isArray)(property)) {
+            const props = {};
+            for (const prop of property) {
+                props[prop] = css(element, prop);
+            }
+            return props;
+        } else if ((0,_lang__WEBPACK_IMPORTED_MODULE_0__.isObject)(property)) {
+            priority = value;
+            (0,_lang__WEBPACK_IMPORTED_MODULE_0__.each)(property, (value, property) => css(element, property, value, priority));
+        }
+    }
+    return elements[0];
+}
+
+const propertyRe = /^\s*(["'])?(.*?)\1\s*$/;
+function getCssVar(name, element = document.documentElement) {
+    return css(element, `--uk-${name}`).replace(propertyRe, '$2');
+}
+
+// https://drafts.csswg.org/cssom/#dom-cssstyledeclaration-setproperty
+const propName = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.memoize)((name) => vendorPropName(name));
+
+const cssPrefixes = ['webkit', 'moz'];
+
+function vendorPropName(name) {
+    if (name[0] === '-') {
+        return name;
+    }
+
+    name = (0,_lang__WEBPACK_IMPORTED_MODULE_0__.hyphenate)(name);
+
+    const { style } = document.documentElement;
+
+    if (name in style) {
+        return name;
+    }
+
+    let i = cssPrefixes.length,
+        prefixedName;
+
+    while (i--) {
+        prefixedName = `-${cssPrefixes[i]}-${name}`;
+        if (prefixedName in style) {
+            return prefixedName;
+        }
+    }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/uikit/src/js/util/viewport.js":
+/*!****************************************************!*\
+  !*** ./node_modules/uikit/src/js/util/viewport.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "isInView": () => (/* binding */ isInView),
+/* harmony export */   "offsetViewport": () => (/* binding */ offsetViewport),
+/* harmony export */   "scrollIntoView": () => (/* binding */ scrollIntoView),
+/* harmony export */   "scrollParents": () => (/* binding */ scrollParents),
+/* harmony export */   "scrollTop": () => (/* binding */ scrollTop),
+/* harmony export */   "scrolledOver": () => (/* binding */ scrolledOver)
+/* harmony export */ });
+/* harmony import */ var _style__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style */ "./node_modules/uikit/src/js/util/style.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filter */ "./node_modules/uikit/src/js/util/filter.js");
+/* harmony import */ var _dimensions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dimensions */ "./node_modules/uikit/src/js/util/dimensions.js");
+/* harmony import */ var _lang__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./lang */ "./node_modules/uikit/src/js/util/lang.js");
+
+
+
+
+
+function isInView(element, offsetTop = 0, offsetLeft = 0) {
+    if (!(0,_filter__WEBPACK_IMPORTED_MODULE_0__.isVisible)(element)) {
+        return false;
+    }
+
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_1__.intersectRect)(
+        ...scrollParents(element)
+            .map((parent) => {
+                const { top, left, bottom, right } = offsetViewport(parent);
+
+                return {
+                    top: top - offsetTop,
+                    left: left - offsetLeft,
+                    bottom: bottom + offsetTop,
+                    right: right + offsetLeft,
+                };
+            })
+            .concat((0,_dimensions__WEBPACK_IMPORTED_MODULE_2__.offset)(element))
+    );
+}
+
+function scrollTop(element, top) {
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_1__.isWindow)(element) || (0,_lang__WEBPACK_IMPORTED_MODULE_1__.isDocument)(element)) {
+        element = scrollingElement(element);
+    } else {
+        element = (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toNode)(element);
+    }
+
+    if ((0,_lang__WEBPACK_IMPORTED_MODULE_1__.isUndefined)(top)) {
+        return element.scrollTop;
+    } else {
+        element.scrollTop = top;
+    }
+}
+
+function scrollIntoView(element, { offset: offsetBy = 0 } = {}) {
+    const parents = (0,_filter__WEBPACK_IMPORTED_MODULE_0__.isVisible)(element) ? scrollParents(element) : [];
+    return parents.reduce(
+        (fn, scrollElement, i) => {
+            const { scrollTop, scrollHeight, offsetHeight } = scrollElement;
+            const viewport = offsetViewport(scrollElement);
+            const maxScroll = scrollHeight - viewport.height;
+            const { height: elHeight, top: elTop } = parents[i - 1]
+                ? offsetViewport(parents[i - 1])
+                : (0,_dimensions__WEBPACK_IMPORTED_MODULE_2__.offset)(element);
+
+            let top = Math.ceil(elTop - viewport.top - offsetBy + scrollTop);
+
+            if (offsetBy > 0 && offsetHeight < elHeight + offsetBy) {
+                top += offsetBy;
+            } else {
+                offsetBy = 0;
+            }
+
+            if (top > maxScroll) {
+                offsetBy -= top - maxScroll;
+                top = maxScroll;
+            } else if (top < 0) {
+                offsetBy -= top;
+                top = 0;
+            }
+
+            return () => scrollTo(scrollElement, top - scrollTop).then(fn);
+        },
+        () => Promise.resolve()
+    )();
+
+    function scrollTo(element, top) {
+        return new Promise((resolve) => {
+            const scroll = element.scrollTop;
+            const duration = getDuration(Math.abs(top));
+            const start = Date.now();
+
+            (function step() {
+                const percent = ease((0,_lang__WEBPACK_IMPORTED_MODULE_1__.clamp)((Date.now() - start) / duration));
+
+                scrollTop(element, scroll + top * percent);
+
+                // scroll more if we have not reached our destination
+                if (percent === 1) {
+                    resolve();
+                } else {
+                    requestAnimationFrame(step);
+                }
+            })();
+        });
+    }
+
+    function getDuration(dist) {
+        return 40 * Math.pow(dist, 0.375);
+    }
+
+    function ease(k) {
+        return 0.5 * (1 - Math.cos(Math.PI * k));
+    }
+}
+
+function scrolledOver(element, startOffset = 0, endOffset = 0) {
+    if (!(0,_filter__WEBPACK_IMPORTED_MODULE_0__.isVisible)(element)) {
+        return 0;
+    }
+
+    const [scrollElement] = scrollParents(element, /auto|scroll/, true);
+    const { scrollHeight, scrollTop } = scrollElement;
+    const { height: viewportHeight } = offsetViewport(scrollElement);
+    const maxScroll = scrollHeight - viewportHeight;
+    const elementOffsetTop = (0,_dimensions__WEBPACK_IMPORTED_MODULE_2__.offsetPosition)(element)[0] - (0,_dimensions__WEBPACK_IMPORTED_MODULE_2__.offsetPosition)(scrollElement)[0];
+
+    const start = Math.max(0, elementOffsetTop - viewportHeight + startOffset);
+    const end = Math.min(maxScroll, elementOffsetTop + element.offsetHeight - endOffset);
+
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_1__.clamp)((scrollTop - start) / (end - start));
+}
+
+function scrollParents(element, overflowRe = /auto|scroll|hidden/, scrollable = false) {
+    const scrollEl = scrollingElement(element);
+
+    let ancestors = (0,_filter__WEBPACK_IMPORTED_MODULE_0__.parents)(element).reverse();
+    ancestors = ancestors.slice(ancestors.indexOf(scrollEl) + 1);
+
+    const fixedIndex = (0,_lang__WEBPACK_IMPORTED_MODULE_1__.findIndex)(ancestors, (el) => (0,_style__WEBPACK_IMPORTED_MODULE_3__.css)(el, 'position') === 'fixed');
+    if (~fixedIndex) {
+        ancestors = ancestors.slice(fixedIndex);
+    }
+
+    return [scrollEl]
+        .concat(
+            ancestors.filter(
+                (parent) =>
+                    overflowRe.test((0,_style__WEBPACK_IMPORTED_MODULE_3__.css)(parent, 'overflow')) &&
+                    (!scrollable || parent.scrollHeight > offsetViewport(parent).height)
+            )
+        )
+        .reverse();
+}
+
+function offsetViewport(scrollElement) {
+    let viewportElement = getViewport(scrollElement);
+
+    let rect = (0,_dimensions__WEBPACK_IMPORTED_MODULE_2__.offset)(viewportElement);
+    for (let [prop, dir, start, end] of [
+        ['width', 'x', 'left', 'right'],
+        ['height', 'y', 'top', 'bottom'],
+    ]) {
+        if (!(0,_lang__WEBPACK_IMPORTED_MODULE_1__.isWindow)(viewportElement)) {
+            rect[start] += (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toFloat)((0,_style__WEBPACK_IMPORTED_MODULE_3__.css)(viewportElement, `border${(0,_lang__WEBPACK_IMPORTED_MODULE_1__.ucfirst)(start)}Width`));
+        } else {
+            // iOS 12 returns <body> as scrollingElement
+            viewportElement = viewportElement.document.documentElement;
+        }
+        rect[prop] = rect[dir] = viewportElement[`client${(0,_lang__WEBPACK_IMPORTED_MODULE_1__.ucfirst)(prop)}`];
+        rect[end] = rect[prop] + rect[start];
+    }
+    return rect;
+}
+
+function scrollingElement(element) {
+    return (0,_lang__WEBPACK_IMPORTED_MODULE_1__.toWindow)(element).document.scrollingElement;
+}
+
+function getViewport(scrollElement) {
+    return scrollElement === scrollingElement(scrollElement) ? window : scrollElement;
+}
 
 
 /***/ })

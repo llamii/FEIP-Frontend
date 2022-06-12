@@ -1,5 +1,16 @@
+@import './uikit.scss';
+@import './elements.scss';
 @import '../layouts/base.scss';
-@import "./uikit.scss";
 
-$primary: red;
-$secondary: blue;
+// Functions
+@function toRem($size) {
+    @return $size / 16px * 1rem;
+}
+
+// Components
+@import '../components/site-nav/site-nav.scss';
+@import '../components/header/header.scss';
+
+
+
+
