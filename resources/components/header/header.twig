@@ -58,12 +58,12 @@
 {% macro phone(phone) %}
     {% set phone = phone ?? '' %}
     <a href="tel:{{ phone }}" class="PrimaryPhone">
-        <img 
+        <img class="PrimaryPhone__icon"
             src="{{ 'assets/icons/phone.svg' }}"
             alt="phone"
         >
+        {{ phone }}
     </a>
-    {{ phone }}
 {% endmacro %}
 
 {% macro button() %}

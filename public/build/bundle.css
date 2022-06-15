@@ -11884,7 +11884,8 @@ h3 {
 .PrimaryPhone:hover, .PrimaryPhone:focus, .PrimaryPhone:active {
   color: black;
 }
-.PrimaryPhone_icon {
+.PrimaryPhone__icon {
+  margin-left: 8px;
   margin-right: 8px;
 }
 
@@ -11893,13 +11894,15 @@ h3 {
   flex-direction: column;
   min-height: 100vh;
 }
-.Layout_main {
+.Layout__main {
   flex: 1;
 }
 
 .SiteNav {
   display: flex;
   list-style: none;
+  margin-top: 1.5em;
+  align-items: center;
 }
 .SiteNav__listItem:not(:last-child) {
   margin-right: 24px;
@@ -11919,6 +11922,7 @@ h3 {
   align-items: center;
 }
 .Header__logo {
+  padding-top: 5px;
   width: 160px;
   margin-right: 80px;
 }

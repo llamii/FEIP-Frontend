@@ -1,7 +1,9 @@
 .SiteNav {
     display: flex;
     list-style: none;
-
+    margin-top: 1.5em;
+    align-items: center;
+    
     &__listItem {
         &:not(:last-child) {
             margin-right: 24px;
