@@ -1,13 +1,35 @@
+$background-header: #FFFFFF;
+
 .Layout {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 95vh;
 
     &__main {
         flex: 1;
     }
-}
 
-.Container {
-    @extend .uk-container;
+    &__section {
+        &--slider {
+            padding-bottom: 8rem;
+            @include vw-xs-down {
+                padding-left: 0.2rem;
+                padding-right: 0.2rem;
+                padding-bottom: 2rem;
+            }
+        }
+    }
+
+    &__header {
+        @include vw-xs-down {
+            padding-left: 0.2rem;
+            padding-right: 0.2rem;
+        }
+        background-color: $background-header;
+    }
+
+    &__footer {
+        background-color: #FFFFFF;
+    }
+
 }

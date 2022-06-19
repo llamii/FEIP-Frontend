@@ -1,17 +1,26 @@
-@import './uikit.scss';
-@import './elements.scss';
-@import '../layouts/base.scss';
-
-// Functions
-@function toRem($size) {
-    @return $size / 16px * 1rem;
-}
+@import "./uikit.scss";
+@import "../styles/media.scss";
+@import "../styles/elements.scss";
+@import "../layouts/base.scss";
+// @import url(https://unpkg.com/swiper/swiper-bundle.min.css);
 
 // Components
-@import '../components/site-nav/site-nav.scss';
+
 @import '../components/header/header.scss';
+@import '../components/footer/footer.scss';
+@import '../components/site-nav/site-nav.scss';
+@import '../components/contacts/contacts.scss';
+@import '../components/slider/slider.scss';
+@import '../components/featured-section/featured-section.scss';
 
+$primary: rgb(82, 79, 79);
+$secondary: grey;
 
+.hello-world {
+    color: $primary;
+}
 
+.lorem {
+    color: $secondary;
+}
 
-    

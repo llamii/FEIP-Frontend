@@ -2,23 +2,31 @@
 
 {% set scope = {
     items: items ?? [],
+    column: column ?? false,
+    white: white ?? false,
 } %}
 
 {% macro content(scope) %}
-<ul class="SiteNav">    
-    {% for item in scope.items %}
-    {% set item = {
-        url: item.url ?? '',
-        name: item.name ?? '',
-    } %}
+    <ul
+        class="
+            SiteNav
+            {{ scope.column ? "SiteNav--column" }}
+            {{ scope.white ? "SiteNav--white" }}
+        "
+    >
+        {% for item in scope.items %}
+            {% set item = {
+                url: item.url ?? '',
+                title: item.title ?? '',
+            } %}
 
-    <li class="SiteNav__listItem">
-        <a href="{{ item.url }}" class= "SiteNav__item">
-            {{ item.name }}
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+            <li class="SiteNav__listItem">
+                <a href="{{ item.url }}" class="SiteNav__item">
+                    {{ item.title }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endmacro %}
 
 {{ macros.content(scope) }}

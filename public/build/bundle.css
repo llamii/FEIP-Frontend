@@ -2246,21 +2246,22 @@ select.uk-form-width-xsmall {
 /*
  * Secondary
  */
-.uk-button-secondary {
+.uk-button-secondary, .Button--secondary {
   background-color: #222;
   color: #fff;
   border: 1px solid transparent;
 }
 
 /* Hover */
-.uk-button-secondary:hover {
+.uk-button-secondary:hover, .Button--secondary:hover {
   background-color: #151515;
   color: #fff;
 }
 
 /* OnClick + Active */
-.uk-button-secondary:active,
-.uk-button-secondary.uk-active {
+.uk-button-secondary:active, .Button--secondary:active,
+.uk-button-secondary.uk-active,
+.uk-active.Button--secondary {
   background-color: #090909;
   color: #fff;
 }
@@ -2295,6 +2296,7 @@ select.uk-form-width-xsmall {
 .uk-button-primary:disabled,
 .Button--primary:disabled,
 .uk-button-secondary:disabled,
+.Button--secondary:disabled,
 .uk-button-danger:disabled {
   background-color: transparent;
   color: #999;
@@ -11467,26 +11469,37 @@ iframe[data-uk-cover] {
   background-color: #e6e6e6;
   color: #666;
 }
-.uk-light .uk-button-secondary, .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary, .uk-section-secondary:not(.uk-preserve-color) .uk-button-secondary, .uk-tile-primary:not(.uk-preserve-color) .uk-button-secondary, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-secondary, .uk-card-primary.uk-card-body .uk-button-secondary, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-secondary, .uk-card-secondary.uk-card-body .uk-button-secondary, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-secondary, .uk-overlay-primary .uk-button-secondary, .uk-offcanvas-bar .uk-button-secondary {
+.uk-light .uk-button-secondary, .uk-light .Button--secondary, .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary, .uk-section-primary:not(.uk-preserve-color) .Button--secondary, .uk-section-secondary:not(.uk-preserve-color) .uk-button-secondary, .uk-section-secondary:not(.uk-preserve-color) .Button--secondary, .uk-tile-primary:not(.uk-preserve-color) .uk-button-secondary, .uk-tile-primary:not(.uk-preserve-color) .Button--secondary, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-secondary, .uk-tile-secondary:not(.uk-preserve-color) .Button--secondary, .uk-card-primary.uk-card-body .uk-button-secondary, .uk-card-primary.uk-card-body .Button--secondary, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-secondary, .uk-card-primary > :not([class*=uk-card-media]) .Button--secondary, .uk-card-secondary.uk-card-body .uk-button-secondary, .uk-card-secondary.uk-card-body .Button--secondary, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-secondary, .uk-card-secondary > :not([class*=uk-card-media]) .Button--secondary, .uk-overlay-primary .uk-button-secondary, .uk-overlay-primary .Button--secondary, .uk-offcanvas-bar .uk-button-secondary, .uk-offcanvas-bar .Button--secondary {
   background-color: #fff;
   color: #666;
 }
-.uk-light .uk-button-secondary:hover, .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-section-secondary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-tile-primary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-card-primary.uk-card-body .uk-button-secondary:hover, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-secondary:hover, .uk-card-secondary.uk-card-body .uk-button-secondary:hover, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-secondary:hover, .uk-overlay-primary .uk-button-secondary:hover, .uk-offcanvas-bar .uk-button-secondary:hover {
+.uk-light .uk-button-secondary:hover, .uk-light .Button--secondary:hover, .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-section-primary:not(.uk-preserve-color) .Button--secondary:hover, .uk-section-secondary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-section-secondary:not(.uk-preserve-color) .Button--secondary:hover, .uk-tile-primary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-tile-primary:not(.uk-preserve-color) .Button--secondary:hover, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-secondary:hover, .uk-tile-secondary:not(.uk-preserve-color) .Button--secondary:hover, .uk-card-primary.uk-card-body .uk-button-secondary:hover, .uk-card-primary.uk-card-body .Button--secondary:hover, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-secondary:hover, .uk-card-primary > :not([class*=uk-card-media]) .Button--secondary:hover, .uk-card-secondary.uk-card-body .uk-button-secondary:hover, .uk-card-secondary.uk-card-body .Button--secondary:hover, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-secondary:hover, .uk-card-secondary > :not([class*=uk-card-media]) .Button--secondary:hover, .uk-overlay-primary .uk-button-secondary:hover, .uk-overlay-primary .Button--secondary:hover, .uk-offcanvas-bar .uk-button-secondary:hover, .uk-offcanvas-bar .Button--secondary:hover {
   background-color: #f2f2f2;
   color: #666;
 }
-.uk-light .uk-button-secondary:active, .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-section-secondary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-tile-primary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-card-primary.uk-card-body .uk-button-secondary:active, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-secondary:active, .uk-card-secondary.uk-card-body .uk-button-secondary:active, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-secondary:active, .uk-overlay-primary .uk-button-secondary:active, .uk-offcanvas-bar .uk-button-secondary:active,
+.uk-light .uk-button-secondary:active, .uk-light .Button--secondary:active, .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-section-primary:not(.uk-preserve-color) .Button--secondary:active, .uk-section-secondary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-section-secondary:not(.uk-preserve-color) .Button--secondary:active, .uk-tile-primary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-tile-primary:not(.uk-preserve-color) .Button--secondary:active, .uk-tile-secondary:not(.uk-preserve-color) .uk-button-secondary:active, .uk-tile-secondary:not(.uk-preserve-color) .Button--secondary:active, .uk-card-primary.uk-card-body .uk-button-secondary:active, .uk-card-primary.uk-card-body .Button--secondary:active, .uk-card-primary > :not([class*=uk-card-media]) .uk-button-secondary:active, .uk-card-primary > :not([class*=uk-card-media]) .Button--secondary:active, .uk-card-secondary.uk-card-body .uk-button-secondary:active, .uk-card-secondary.uk-card-body .Button--secondary:active, .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-secondary:active, .uk-card-secondary > :not([class*=uk-card-media]) .Button--secondary:active, .uk-overlay-primary .uk-button-secondary:active, .uk-overlay-primary .Button--secondary:active, .uk-offcanvas-bar .uk-button-secondary:active, .uk-offcanvas-bar .Button--secondary:active,
 .uk-light .uk-button-secondary.uk-active,
+.uk-light .uk-active.Button--secondary,
 .uk-section-primary:not(.uk-preserve-color) .uk-button-secondary.uk-active,
+.uk-section-primary:not(.uk-preserve-color) .uk-active.Button--secondary,
 .uk-section-secondary:not(.uk-preserve-color) .uk-button-secondary.uk-active,
+.uk-section-secondary:not(.uk-preserve-color) .uk-active.Button--secondary,
 .uk-tile-primary:not(.uk-preserve-color) .uk-button-secondary.uk-active,
+.uk-tile-primary:not(.uk-preserve-color) .uk-active.Button--secondary,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-button-secondary.uk-active,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-active.Button--secondary,
 .uk-card-primary.uk-card-body .uk-button-secondary.uk-active,
+.uk-card-primary.uk-card-body .uk-active.Button--secondary,
 .uk-card-primary > :not([class*=uk-card-media]) .uk-button-secondary.uk-active,
+.uk-card-primary > :not([class*=uk-card-media]) .uk-active.Button--secondary,
 .uk-card-secondary.uk-card-body .uk-button-secondary.uk-active,
+.uk-card-secondary.uk-card-body .uk-active.Button--secondary,
 .uk-card-secondary > :not([class*=uk-card-media]) .uk-button-secondary.uk-active,
+.uk-card-secondary > :not([class*=uk-card-media]) .uk-active.Button--secondary,
 .uk-overlay-primary .uk-button-secondary.uk-active,
-.uk-offcanvas-bar .uk-button-secondary.uk-active {
+.uk-overlay-primary .uk-active.Button--secondary,
+.uk-offcanvas-bar .uk-button-secondary.uk-active,
+.uk-offcanvas-bar .uk-active.Button--secondary {
   background-color: #e6e6e6;
   color: #666;
 }
@@ -11875,58 +11888,188 @@ h3 {
     page-break-after: avoid;
   }
 }
-.PrimaryPhone {
-  display: flex;
-  font-size: toRem(14px);
-  line-height: 1.2;
-  color: #254741;
+.Button--primary {
+  height: 49px;
+  width: 204px;
+  background-color: #029F59;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
 }
-.PrimaryPhone:hover, .PrimaryPhone:focus, .PrimaryPhone:active {
-  color: black;
-}
-.PrimaryPhone__icon {
-  margin-left: 8px;
-  margin-right: 8px;
+.Button--icon {
+  padding-left: 16px;
+  padding-right: 16px;
+  width: 60px;
 }
 
 .Layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 95vh;
 }
 .Layout__main {
   flex: 1;
+}
+.Layout__section--slider {
+  padding-bottom: 8rem;
+}
+@media (max-width: 449px) {
+  .Layout__section--slider {
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    padding-bottom: 2rem;
+  }
+}
+.Layout__header {
+  background-color: #FFFFFF;
+}
+@media (max-width: 449px) {
+  .Layout__header {
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+  }
+}
+.Layout__footer {
+  background-color: #254741;
 }
 
 .SiteNav {
   display: flex;
   list-style: none;
   margin-top: 1.5em;
-  align-items: center;
+}
+.SiteNav--column {
+  flex-flow: column;
+}
+:root .SiteNav--column .SiteNav__listItem {
+  margin-right: unset;
+}
+.SiteNav--column .SiteNav__listItem:not(:last-child) {
+  margin-bottom: 1.7em;
+}
+.SiteNav--column .SiteNav__listItem:first-child {
+  margin-top: 2.5em;
+}
+:root .SiteNav--white .SiteNav__item {
+  color: white;
+}
+.SiteNav--white .SiteNav__item:hover {
+  color: #004a29;
+}
+.SiteNav__listItem {
+  flex-grow: column;
 }
 .SiteNav__listItem:not(:last-child) {
   margin-right: 24px;
 }
+.SiteNav__listItem a {
+  text-decoration: none;
+}
 .SiteNav__item {
   line-height: 1.2;
-  color: #666666;
+  color: grey;
 }
-.SiteNav__item:hover, .SiteNav__item:focus, .SiteNav__item:active {
+.SiteNav__item:hover, .SiteNav__itemfocus, .SiteNav__itemactive {
   color: black;
 }
 
 .Header {
-  padding-top: 24px;
-  padding-bottom: 24px;
   display: flex;
   align-items: center;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  font-weight: lighter;
 }
 .Header__logo {
-  padding-top: 5px;
-  width: 160px;
   margin-right: 80px;
+}
+@media (max-width: 1449px) {
+  .Header__logo {
+    margin-right: 5%;
+  }
+}
+@media (max-width: 1024px) {
+  .Header__nav {
+    display: none;
+  }
 }
 .Header__phone {
   margin-left: auto;
   margin-right: 24px;
+  font-family: "Montserrat", sans-serif;
+}
+@media (max-width: 799px) {
+  .Header__phone {
+    display: none;
+  }
+}
+@media (max-width: 799px) {
+  .Header__feedbackButton {
+    display: none;
+  }
+}
+.Header__offCanvasButton {
+  margin-left: 16px;
+}
+@media (min-width: 800px) {
+  .Header__offCanvasButton {
+    display: none;
+  }
+}
+@media (max-width: 799px) {
+  .Header__offCanvasButton {
+    margin-left: auto;
+  }
+}
+
+.OffCanvas__layout {
+  display: flex;
+  flex-flow: column;
+  padding-top: 3em;
+  padding-bottom: 6.5em;
+  width: 17em;
+  background-color: #029F59;
+}
+.OffCanvas__close {
+  top: 31px;
+  right: 39px;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #00ba66;
+  cursor: pointer;
+}
+.OffCanvas__close img {
+  display: block;
+}
+.OffCanvas__nav {
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+  margin-bottom: 1.5em;
+  font-size: 18px;
+  font-weight: lighter;
+}
+.OffCanvas__contacts {
+  font-size: 0.875em;
+  font-weight: lighter;
+}
+
+.ContactsSection {
+  display: grid;
+  gap: 1em;
+  color: inherit;
+}
+.ContactsSection a {
+  color: inherit;
+}
+
+.ContactsItem {
+  display: flex;
+  flex-flow: row;
+  align-items: flex-start;
+}
+.ContactsItem__icon {
+  flex-shrink: 0;
+  margin-bottom: 0.15em;
+  margin-right: 0.5em;
+  width: 1em;
 }

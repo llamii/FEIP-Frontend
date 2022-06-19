@@ -5,12 +5,6 @@ $base-list-padding-left: 0;
 $base-body-font-size: 100%;
 $base-on-color: inherit;
 
-// Colors
-$color-black: black;
-$color-gray: #666666;
-$color-green--dark: #254741;
-$color-green: #029F59;
-
 $base-body-line-height: 1.35;
 $base-h1-line-height: $base-body-line-height;
 $base-h2-line-height: $base-body-line-height;
@@ -27,37 +21,21 @@ $container-padding-horizontal-m: 80px;
 $container-padding-horizontal-s: 32px;
 $container-padding-horizontal: 16px;
 
-$button-primary-background: $color-green;
-$button-primary-color: white;
-$button-primary-hover-background: darken($button-primary-background, 5%);
-$button-primary-hover-color: white;
-$button-primary-active-background: darken($button-primary-background, 10%);
-$button-primary-active-color: white;
-
 $global-font-family: 'Open Sans', sans-serif;
 $base-heading-font-family: 'Montserrat', sans-serif;
 
 // 2. Import default variables and available mixins.
-@import "uikit/src/scss/variables-theme.scss";
-@import "uikit/src/scss/mixins-theme.scss";
+@import "~uikit/src/scss/variables.scss";
+@import "~uikit/src/scss/mixins.scss";
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,700,900');
 
 // 3. Your custom mixin overwrites.
 @mixin hook-card() { color: #000; }
-@mixin hook-base-link() {
+
+@mixin hook-base-link {
     transition: color 0.25s ease-in-out;
 }
 
-@mixin hook-button {
-    padding-x: 40px;
-    border-radius: 10px;
-    font-family: $base-heading-font-family;
-    font-weight: 400;
-    font-size: toRem(14px);
-    line-height: 49px;
-    transition: background-color 0.25s ease-in-out;
-}
-
 // 4. Import UIkit.
-@import "uikit/src/scss/uikit-theme.scss";
+@import "~uikit/src/scss/uikit.scss";

@@ -1,15 +1,90 @@
+$background-off-canvas: #029F59;
+$background-off-canvas-button-close: #00ba66;
+
+
 .Header {
-    padding-y: 24px;
     display: flex;
     align-items: center;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    font-weight: lighter;
+    
 
     &__logo {
-        padding-top: 5px;
-        width: 160px;
         margin-right: 80px;
+        @include vw-xl-down {
+            margin-right: 5%;
+        }
+    }
+
+    &__nav {
+        @include vw-lg-down {
+            display: none;
+        }
     }
 
     &__phone {
-        margin-x: auto 24px;
+        margin-left: auto;
+        margin-right: 24px;
+        font-family: $base-heading-font-family;
+        @include vw-md-down {
+            display: none;
+        }
+    }
+
+    &__feedbackButton {
+        @include vw-md-down {
+            display: none;
+        }
+    }
+
+    &__offCanvasButton {
+        margin-left: 16px;
+
+        @include vw-md-up {
+            display: none;
+        }
+
+        @include vw-md-down {
+            margin-left: auto;
+        }
+    }
+}
+
+.OffCanvas {    
+    &__layout {
+        display: flex;
+        flex-flow: column;
+        padding-top: 3em;
+        padding-bottom: 6.5em;
+        width: 17em;
+        background-color: $background-off-canvas;
+    }
+
+    &__close {
+        top: 31px;
+        right: 39px;
+        padding: 10px;
+        border-radius: 6px;
+        background-color: $background-off-canvas-button-close;
+        cursor: pointer;
+
+        img {
+            display: block;
+        }
+    }
+
+    &__nav {
+        display: flex;
+        flex-flow: column;
+        flex-grow: 1;
+        margin-bottom: 1.5em;
+        font-size: 18px;
+        font-weight: lighter;
+    }
+
+    &__contacts {
+        font-size: 0.875em;
+        font-weight: lighter;
     }
 }

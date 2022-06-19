@@ -4,19 +4,18 @@
     menu: [
         {
             url: '/',
-            name: 'Релизованные проекты',
+            title: 'Реализованные проекты',
         },
         {
             url: '/',
-            name: 'Новости',
+            title: 'Новости',
         },
         {
             url: '/',
-            name: 'Контакты',
+            title: 'Контакты',
         },
-
     ],
-    phone:  '+7 (900) 900-90-90',
+    phone: '8 (800) 555-35-35',
 } %}
 
 {% macro content(scope) %}
@@ -25,23 +24,26 @@
             {{ macros.logo }}
         </div>
 
-        <div class="Header__menu">
-            {% include '@components/site-nav/site-nav.twig' 
-                with {
-                    items: scope.menu,
-                }
-            %}
-        </div>
+        <nav class="Header__nav">
+            {% include "@components/site-nav/site-nav.twig" with {
+                items: scope.menu,
+            } %}
+        </nav>
 
         <div class="Header__phone">
             {{ macros.phone(scope.phone) }}
         </div>
 
-        <div class="Header__button">
-        {{ macros.button }}
+        
+        <div class="Header__feedbackButton">
+            {{ macros.button }}
         </div>
 
+        <div class="Header__offCanvasButton">
+            {{ macros.offCanvasButton }}
+        </div>
     </div>
+    {{ macros.offCanvas(scope) }}
 {% endmacro %}
 
 {{ macros.content(scope) }}
@@ -50,24 +52,65 @@
     <a href="{{ route('home') }}">
         <img
             src="{{ 'assets/images/logo.png' }}"
-            alt="logo"
-        >
+            alt="Cottage"
+         >
     </a>
 {% endmacro %} 
 
 {% macro phone(phone) %}
     {% set phone = phone ?? '' %}
     <a href="tel:{{ phone }}" class="PrimaryPhone">
-        <img class="PrimaryPhone__icon"
+        <img 
             src="{{ 'assets/icons/phone.svg' }}"
-            alt="phone"
-        >
-        {{ phone }}
+            alt="Phone icon"
+         >
     </a>
+    {{ phone }}
 {% endmacro %}
 
 {% macro button() %}
     <button type="button" class="Button Button--primary">
         Оставить заявку
     </button>
+{% endmacro %}
+
+{% macro offCanvasButton() %}
+    <button
+        uk-toggle="target: #offcanvas"
+        type="button"
+        class="Button Button--primary Button--icon"
+    >
+        <img 
+                src="{{ 'assets/icons/list-white.png' }}"
+                alt="List icon" width="24" height="14"
+        >
+    </button>
+{% endmacro %}
+{% macro offCanvas(scope) %}
+    <div id="offcanvas" uk-offcanvas="overlay: true; flip: true;" class="OffCanvas">
+        <div class="uk-offcanvas-bar OffCanvas__layout">
+            <button
+                class="uk-offcanvas-close Button OffCanvas__close"
+                type="button"
+                
+            >
+                <img
+                    src="{{ 'assets/icons/cross-white.svg' }}"
+                    alt="Cross icon" width="12" height="12"
+                >
+            </button>
+
+            <nav class="OffCanvas__nav">
+            {% include '@components/site-nav/site-nav.twig' with {
+                items: scope.menu,
+                column: true,
+                white: true,
+            } %}
+            </nav>
+
+            <div class="OffCanvas__contacts">
+                {% include '@components/contacts/contacts.twig' %}
+            </div>
+        </div>
+    </div>
 {% endmacro %}
