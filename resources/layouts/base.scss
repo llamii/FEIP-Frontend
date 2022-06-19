@@ -1,4 +1,5 @@
 $background-header: #FFFFFF;
+$background-footer: #254741;
 
 .Layout {
     display: flex;
@@ -29,7 +30,6 @@ $background-header: #FFFFFF;
     }
 
     &__footer {
-        background-color: #FFFFFF;
+        background-color: $background-footer;
     }
-
 }

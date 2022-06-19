@@ -1,0 +1,44 @@
+.FeaturedSection {
+    @include vw-xs-up {
+        display: grid;
+        grid-template-columns: [colFirst] 50% [col2] 50% [colEnd];
+    }
+
+    &__title {
+        color: #000000;
+        font-weight: 700;
+    }
+
+    &__grid {
+        @include vw-xs-up {
+            display: grid;
+            grid-template-columns: [colFirst] 50% [col1] 50% [colEnd];
+            grid-template-rows: [rowFirst] 25% [row1] 75% [rowEnd];
+        }
+        list-style-type: none;
+    }
+}
+
+.FeaturedItem {
+    background-color: #F5F7F3;
+    border-radius: 5%;
+    width: 18rem;
+    height: 11rem;
+    @include vw-xs-up {
+        margin-right: 2rem;
+    }
+    @include vw-xs-down {
+        margin-bottom: 1rem;
+    }
+    
+    &__content {
+        padding: 1rem 1rem;
+    }
+    &__icon {
+        padding-bottom: 2rem;
+    }
+    &__title {
+        color: #000000;
+        font-weight: 500;
+    }
+}

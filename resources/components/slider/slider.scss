@@ -1,0 +1,100 @@
+$pagination-bullet-active-background: #03B766;
+$pagination-bullet-background: #C6C6C6;
+
+
+
+.Slide {
+    position: relative;
+    color: white;
+    &__content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-80%, -50%);
+        padding-right: 12rem;
+        @include vw-xs-down {
+            padding-right: 0;
+            top: 75%;
+            transform: translate(-50%, -50%);
+            padding-bottom: 2rem;
+            width: 20rem;
+            @include vw-xxs-down {
+                width: 15rem;
+            }
+        }
+    }
+    &__title {
+        font-weight: 700;
+        font-family: $base-heading-font-family;
+        color: white;
+        line-height: 3rem;
+        font-size: 2.5rem;
+        letter-spacing: 0.10rem;
+        @include vw-xs-down {
+            line-height: 2rem;
+            font-size: 1.8rem;
+        }
+        @include vw-xxs-down {
+            line-height: 1.75rem;
+            font-size: 1.4rem;
+        }
+    }
+    &__text {
+        font-weight: 100;
+        @include vw-xs-down {
+            font-size: 1rem;
+        }
+        @include vw-xxs-down {
+            font-size: 0.75rem;
+        }
+    }
+}
+.Slider {
+    --swiper-navigation-size: 5rem;
+    .swiper-button-next {
+        background-image: url(../../../public/assets/icons/right-arrow-swiper.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 10px;
+        @include vw-lg-down {
+            display: none;
+        }
+    }  
+    
+    .swiper-button-next::after {
+        display: none;
+    }
+    
+    .swiper-button-prev {
+        background-image: url(../../../public/assets/icons/left-arrow-swiper.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 10px;
+        @include vw-lg-down {
+            display: none;
+        }
+    }
+    
+    .swiper-button-prev::after {
+        display: none;
+    }
+    
+    .swiper-pagination {
+        padding-bottom: 1rem;
+        @include vw-lg-down {
+            display: none;
+        }
+    }
+
+    .swiper-pagination-bullet {
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        text-align: center;
+        opacity: 1;
+        background: $pagination-bullet-background;
+    }
+    .swiper-pagination-bullet-active {
+        background: $pagination-bullet-active-background;
+    }
+}
